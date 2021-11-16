@@ -24,10 +24,13 @@ namespace Gacha_Game_2 {
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
+        public string BgUri { get { return Globals.BackgroundImgUrl; } }
+
         // Player Data
-        private PlayerData Player = new PlayerData();
-        private List<Card> Cards = new List<Card>();
-        private List<string> CardDir = new List<string>();
+        public static PlayerData Player = new PlayerData();
+        public static List<Card> OwnedCards = new List<Card>();
+        public static Card[] DroppedCards = null;
+        public static List<string> CardDir = new List<string>();
 
         /// <summary>
         /// Defualt Constructor for MainWindow
@@ -51,29 +54,34 @@ namespace Gacha_Game_2 {
             // Load everything
             Player = FileHandler.LoadPlayerData();
 
-            // Loading all cards from local DB
-            foreach (var cardDir in Directory.GetFiles(CardsDir)) {
-                try {
-                    CardDir.Add(cardDir);
-                    Cards.Add(JsonConvert.DeserializeObject<Card>(File.ReadAllText(cardDir)));
-                }
-                catch {
-                    File.AppendAllText(LogFile, File.ReadAllText(cardDir) + " @" + DateTime.Now);
-                }
-            }
+            LoadCardsFromLocalDB();
             
             // If there are no cards in the files
-            if (Cards.Count == 0) {
+            if (OwnedCards.Count == 0) {
                 NoCardsFoundErrorWindow n = new NoCardsFoundErrorWindow();
                 n.ShowDialog();
-                if (!n.ClosedCorrectly) Environment.Exit(0); 
+                if (!n.ClosedCorrectly) Environment.Exit(0);
+                LoadCardsFromLocalDB();
             }
             
             InitializeComponent();
         }
 
-
-        
+        /// <summary>
+        /// Loads the cards from the local DB
+        /// </summary>
+        private void LoadCardsFromLocalDB() {
+            // Loading all cards from local DB
+            foreach (var cardDir in Directory.GetFiles(CardsDir)) {
+                try {
+                    CardDir.Add(cardDir);
+                    OwnedCards.Add(JsonConvert.DeserializeObject<Card>(File.ReadAllText(cardDir)));
+                }
+                catch {
+                    File.AppendAllText(LogFile, File.ReadAllText(cardDir) + " @" + DateTime.Now);
+                }
+            }
+        }
 
         #region Buttons
         /// <summary>
@@ -82,7 +90,13 @@ namespace Gacha_Game_2 {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void RollForCards_Click(object sender, RoutedEventArgs e) {
-
+            CardDropWindow c = new CardDropWindow(CardDir, Player, OwnedCards, DroppedCards);
+            Hide();
+            c.ShowDialog();
+            Show();
+            OwnedCards = c.OwnedCards;
+            DroppedCards = c.DroppedCards;
+            Player = c.Player;
         }
 
         /// <summary>

@@ -75,6 +75,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="OtherWindows\CardDropWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="OtherWindows\LoginWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -86,6 +90,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GameData\PlayerData.cs" />
+    <Compile Include="OtherWindows\CardDropWindow.xaml.cs">
+      <DependentUpon>CardDropWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="OtherWindows\LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>

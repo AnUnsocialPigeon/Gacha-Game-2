@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gacha_Game_2.GameData;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,6 +18,8 @@ namespace Gacha_Game_2.OtherWindows {
     /// Interaction logic for LoginWindow.xaml
     /// </summary>
     public partial class LoginWindow : Window {
+        public string BgUri { get { return Globals.BackgroundImgUrl; } }
+
         public bool SubmitName = false;
         public LoginWindow() {
             InitializeComponent();

@@ -5,9 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Gacha_Game_2.OtherWindows"
         mc:Ignorable="d"
+        x:Name="NoCards"
         Title="No Cards Found" Height="250" Width="250">
     <Window.Background>
-        <ImageBrush x:Name="BackgroundImage" ImageSource="D:\C#\Gacha Game 2\Gacha Game 2\Assets\background_1.jpg" Stretch="UniformToFill"/>
+        <ImageBrush ImageSource="{Binding ElementName=NoCards, Path=BgUri}" Stretch="UniformToFill"/>
     </Window.Background>
     <Window.Resources>
         <Style TargetType="Button">

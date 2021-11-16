@@ -21,6 +21,7 @@ namespace Gacha_Game_2.OtherWindows {
     /// Interaction logic for NoCardsFoundError.xaml
     /// </summary>
     public partial class NoCardsFoundErrorWindow : Window {
+        public string BgUri { get { return Globals.BackgroundImgUrl; } }
         public bool ClosedCorrectly = false;
         List<Card> Cards = new List<Card>();
         public NoCardsFoundErrorWindow() {
@@ -64,6 +65,12 @@ namespace Gacha_Game_2.OtherWindows {
                 new Card("Rachel Gardner", "Angels Of Death", 1),
                 new Card("Rachel Gardner", "Angels Of Death", 2),
                 new Card("Rachel Gardner", "Angels Of Death", 3),
+                new Card("Albedo", "Genshin", 1, "https://d2l56h9h5tj8ue.cloudfront.net/images/cards/albedo-genshin-impact-1.jpg"),
+                new Card("Albedo", "Genshin", 2, "https://d2l56h9h5tj8ue.cloudfront.net/images/cards/albedo-genshin-impact-2.jpg"),
+                new Card("Albedo", "Genshin", 3, "https://d2l56h9h5tj8ue.cloudfront.net/images/cards/albedo-genshin-impact-3.jpg"),
+                new Card("Taiga Aisaka", "Toradora!", 1),
+                new Card("Taiga Aisaka", "Toradora!", 2),
+                new Card("Taiga Aisaka", "Toradora!", 3)
             };
 
             foreach (Card c in ManualCardAddition) FileHandler.SaveCardData(c);

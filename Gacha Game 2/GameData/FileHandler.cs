@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace Gacha_Game_2.GameData {
     public class FileHandler {
@@ -21,13 +22,13 @@ namespace Gacha_Game_2.GameData {
         /// <param name="json"></param>
         public static void SaveCardData(string json) {
             Card c = JsonConvert.DeserializeObject<Card>(json);
-            File.WriteAllText(FormatCardSaveName(c), json);
+            File.WriteAllText(FormatCardSaveName(c), json, Encoding.ASCII);
         }
         /// <summary>
         /// Saving 1 card
         /// </summary>
         /// <param name="card"></param>
-        public static void SaveCardData(Card card) => File.WriteAllText(FormatCardSaveName(card), JsonConvert.SerializeObject(card));
+        public static void SaveCardData(Card card) => File.WriteAllText(FormatCardSaveName(card), JsonConvert.SerializeObject(card), Encoding.ASCII);
         /// <summary>
         /// Saving multiple cards from json
         /// </summary>
@@ -44,7 +45,15 @@ namespace Gacha_Game_2.GameData {
             foreach (Card c in cards) SaveCardData(c);
         }
 
-        private static string FormatCardSaveName(Card card) => string.Format("{0}{1}_{2}{3}.dat", Globals.CardsDir, card.Name.Trim().Replace(' ', '_'), card.Anime, card.Edition.ToString());
+        /// <summary>
+        /// Loads card data
+        /// </summary>
+        /// <param name="uri"></param>
+        /// <returns></returns>
+        public static Card LoadCardData(string uri) => JsonConvert.DeserializeObject<Card>(File.ReadAllText(uri));
+        
+
+        private static string FormatCardSaveName(Card card) => string.Format("{0}{1}_{2}_{3}.dat", Globals.CardsDir, card.Name.Trim().Replace(' ', '-'), card.Anime.Trim().Replace(' ', '-'), card.Edition.ToString());
         #endregion
 
 

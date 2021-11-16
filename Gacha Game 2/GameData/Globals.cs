@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gacha_Game_2.Classes;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,5 +15,6 @@ namespace Gacha_Game_2.GameData {
         public static string PlayerDataFile => GameDataDir + "PlayerData.dat";
         public static string LogFile => GameDataDir + "Log.dat";
         public static string ServerDetailsFile => GameDataDir + "ServerInfo.txt";
+        public static string BackgroundImgUrl => @"C:\Users\jdtur\OneDrive\VS\Gacha Game 2\Gacha Game 2\Assets\background_1.jpg";
     }
 }

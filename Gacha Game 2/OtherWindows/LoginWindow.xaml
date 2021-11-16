@@ -10,9 +10,9 @@
     </Window.Background>
     <Window.Resources>
         <Style TargetType="Button">
-            <Setter Property="Background" Value="#BB101010"/>
+            <Setter Property="Background" Value="#BB203030"/>
             <Setter Property="FontFamily" Value="Consolas"/>
-            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Foreground" Value="#BBFFFFFF"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
@@ -25,6 +25,7 @@
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#FF203030"/>
+                    <Setter Property="Foreground" Value="White"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -40,6 +41,6 @@
     <Grid>
         <TextBlock HorizontalAlignment="Center" Margin="10,10,10,176" TextWrapping="Wrap" Text="Username:" VerticalAlignment="Center" FontWeight="Bold" Height="33" Width="222" TextAlignment="Center" FontSize="24"/>
         <TextBox Name="Username" Background="#FF202020" BorderBrush="#BB503030" BorderThickness="3" FontFamily="Consolas" FontSize="18" Foreground="White" HorizontalAlignment="Center" Height="50" Margin="10,48,10,121" TextWrapping="Wrap" VerticalAlignment="Center" Width="222" TextAlignment="Center"/>
-        <Button Content="Begin" HorizontalAlignment="Center" Margin="10,127,10,10" VerticalAlignment="Center" Width="222" Height="82" FontSize="30" Foreground="#88FFFFFF" Background="#BB203030" BorderBrush="Red" BorderThickness="4" Click="Button_Click"/>
+        <Button Content="Begin" HorizontalAlignment="Center" Margin="10,127,10,10" VerticalAlignment="Center" Width="222" Height="82" FontSize="30" BorderBrush="Red" BorderThickness="4" Click="Button_Click"/>
     </Grid>
 </Window>

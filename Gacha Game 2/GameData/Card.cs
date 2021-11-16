@@ -9,12 +9,14 @@ namespace Gacha_Game_2.Classes {
     public class Card {
         public Card() { }
         
-        // Attempts to use Karuta's IMG Base.
+        /// Attempts to use Karuta's IMG Base for the imageURL
         public Card(string name, string anime, int ed) {
             Name = name;
             Anime = anime;
             Edition = ed;
             ImgURL = string.Format("http://d2l56h9h5tj8ue.cloudfront.net/images/cards/{0}-{1}.jpg", name.ToLower().Trim().Replace(' ', '-'), ed);
+            Level = 1;
+            Rarity = 1;
         }
 
         public Card(string name, string anime, int ed, string imgURL) {

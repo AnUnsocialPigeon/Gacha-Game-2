@@ -30,23 +30,36 @@ namespace Gacha_Game_2.OtherWindows {
         public InventoryWindow(Dictionary<string, int> ownedCards, List<Card> allCards) {
             AllCards = allCards;
             OwnedCards = ownedCards;
-        
+
             // Finding all cards that the user owns
             foreach (Card c in AllCards) {
-                if (OwnedCards.ContainsKey(FileHandler.FormatCardSaveName(c).Split('.')[0])) {
-                    TextBlock t = new TextBlock() {
-                        Text = c.Name + "\n" + c.Anime + "\n" + OwnedCards[FileHandler.FormatCardSaveName(c).Split('.')[0]]
+                if (OwnedCards.ContainsKey(Formatter.FormatOwnedCards(c))) {
+                    UniformGrid g = new UniformGrid {
+                        Width = 300
                     };
-                    Button b = new Button() {
-                        Content = string.Format("Sell for {0}", (c.Rarity * 200) + (c.Level * 20))
+                    TextBlock t = new TextBlock {
+                        Text = c.Name + "\n" + c.Anime + "\n" + OwnedCards[Formatter.FormatOwnedCards(c)],
+                        Background = new SolidColorBrush(Color.FromArgb(187, 16, 16, 16)),
+                        Foreground = new SolidColorBrush(Color.FromArgb(187, 255, 255, 255))
                     };
+                    Button b = new Button {
+                        Content = string.Format("Sell for {0}", (c.Rarity * 200) + (c.Level * 20)),
+                        Tag = Formatter.FormatOwnedCards(c),
+                        //Background = new SolidColorBrush(Color.FromArgb(187, 32, 32, 32)),
+                        //Foreground = new SolidColorBrush(Color.FromArgb(187, 255, 255, 255))
+                    };
+                    b.Click += new RoutedEventHandler(SellBTN_Click);
                     UniformGrid u = new UniformGrid();
                     u.Children.Add(t);
                     u.Children.Add(b);
                     CardLSTBOX.Items.Add(u);
                 }
+                InitializeComponent();
             }
-            InitializeComponent();
+
+        }
+        public void SellBTN_Click(object sender, RoutedEventArgs e) {
+
         }
     }
 }

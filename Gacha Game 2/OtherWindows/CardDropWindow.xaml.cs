@@ -40,11 +40,12 @@ namespace Gacha_Game_2.OtherWindows {
             AllCards = allCards;
             OwnedCards = ownedCards;
             DroppedCards = droppedCards;
-            if (DroppedCards != null) DisplayCards();
 
             Grab1BTN.IsEnabled = false;
             Grab2BTN.IsEnabled = false;
             Grab3BTN.IsEnabled = false;
+
+            if (DroppedCards != null) DisplayCards();
 
             // Timer to update the DropBox
             Timer UpdateDrop = new Timer();
@@ -101,6 +102,7 @@ namespace Gacha_Game_2.OtherWindows {
 
             DisplayCards();
             RollBTN.Content = "Roll (Cost: 500)";
+            FileHandler.SavePlayerData(Player);
         }
 
         private void DisplayCards() {
@@ -143,6 +145,7 @@ namespace Gacha_Game_2.OtherWindows {
                 Player.ExtraClaim--;
                 LogLSTBOX.Items.Add(string.Format("Extra Grab used! \nYou have {0} remaining.", Player.ExtraClaim));
             }
+            FileHandler.SavePlayerData(Player);
         }
 
 

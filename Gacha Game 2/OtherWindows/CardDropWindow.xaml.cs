@@ -27,15 +27,17 @@ namespace Gacha_Game_2.OtherWindows {
 
         public Card[] DroppedCards;
         private List<string> CardUri;
-        public List<Card> OwnedCards;
+        public Dictionary<string, int> OwnedCards = new Dictionary<string, int>();
+        public List<Card> AllCards;
         public PlayerData Player;
         private Random rnd = new Random();
-        public CardDropWindow(List<string> cardUris, PlayerData playerData, List<Card> ownedCards, Card[]droppedCards) {
+        public CardDropWindow(List<string> cardUris, PlayerData playerData,  List<Card> allCards, Dictionary<string, int> ownedCards, Card[]droppedCards) {
             InitializeComponent();
 
             // Setup
             CardUri = cardUris;
             Player = playerData;
+            AllCards = allCards;
             OwnedCards = ownedCards;
             DroppedCards = droppedCards;
             if (DroppedCards != null) DisplayCards();
@@ -51,7 +53,7 @@ namespace Gacha_Game_2.OtherWindows {
             UpdateDrop.Start();
         }
 
-
+        #region Roll and Drop
         /// <summary>
         /// Handler for the update drop box
         /// </summary>
@@ -92,10 +94,11 @@ namespace Gacha_Game_2.OtherWindows {
 
             // Updating the cards
             DroppedCards = new Card[3] {
-                FileHandler.LoadCardData(CardUri[rnd.Next(0, CardUri.Count)]),
-                FileHandler.LoadCardData(CardUri[rnd.Next(0, CardUri.Count)]),
-                FileHandler.LoadCardData(CardUri[rnd.Next(0, CardUri.Count)])
+                AllCards[rnd.Next(0, CardUri.Count)],
+                AllCards[rnd.Next(0, CardUri.Count)],
+                AllCards[rnd.Next(0, CardUri.Count)]
             };
+
             DisplayCards();
             RollBTN.Content = "Roll (Cost: 500)";
         }
@@ -109,6 +112,7 @@ namespace Gacha_Game_2.OtherWindows {
             Grab2BTN.IsEnabled = true;
             Grab3BTN.IsEnabled = true;
         }
+        #endregion
 
         /// <summary>
         /// When the player grabs a card
@@ -125,12 +129,12 @@ namespace Gacha_Game_2.OtherWindows {
 
             // Adding to cards
             Card c = DroppedCards[int.Parse((sender as Button).Tag.ToString())];
-            foreach (Card cO in OwnedCards) {
-                if (cO.Name == c.Name && cO.Anime == c.Anime) {
-                    cO.Owned++;
-                    break;
-                }
-            }
+            string uri = Formatter.FormatOwnedCards(c);
+            if (OwnedCards.ContainsKey(uri)) OwnedCards[uri]++;
+            else OwnedCards.Add(uri, 1);
+
+            // Saving
+            FileHandler.SaveOwnedCards(OwnedCards);
 
             // Reprecussions
             LogLSTBOX.Items.Add(string.Format("Card {0} has been claimed!", c.Name));

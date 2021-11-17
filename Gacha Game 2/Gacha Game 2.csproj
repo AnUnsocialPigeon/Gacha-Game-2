@@ -69,6 +69,7 @@
     </Compile>
     <Compile Include="GameData\Card.cs" />
     <Compile Include="GameData\FileHandler.cs" />
+    <Compile Include="GameData\Formatters.cs" />
     <Compile Include="GameData\Globals.cs" />
     <Compile Include="GameData\Networking.cs" />
     <Compile Include="MainWindow.xaml.cs">
@@ -76,6 +77,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="OtherWindows\CardDropWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="OtherWindows\InventoryWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -92,6 +97,9 @@
     <Compile Include="GameData\PlayerData.cs" />
     <Compile Include="OtherWindows\CardDropWindow.xaml.cs">
       <DependentUpon>CardDropWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="OtherWindows\InventoryWindow.xaml.cs">
+      <DependentUpon>InventoryWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="OtherWindows\LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>

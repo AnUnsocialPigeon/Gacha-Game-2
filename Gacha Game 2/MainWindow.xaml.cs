@@ -28,7 +28,8 @@ namespace Gacha_Game_2 {
 
         // Player Data
         public static PlayerData Player = new PlayerData();
-        public static List<Card> OwnedCards = new List<Card>();
+        public static List<Card> AllCards = new List<Card>();
+        public static Dictionary<string, int> OwnedCards = new Dictionary<string, int>();
         public static Card[] DroppedCards = null;
         public static List<string> CardDir = new List<string>();
 
@@ -42,6 +43,7 @@ namespace Gacha_Game_2 {
             if (!Directory.Exists(GameDataDir)) Directory.CreateDirectory(GameDataDir);
             if (!File.Exists(LogFile)) File.WriteAllText(LogFile, "");
             if (!File.Exists(ServerDetailsFile)) File.WriteAllText(ServerDetailsFile, "");
+            if (!File.Exists(OwnedCardsFile)) FileHandler.SaveOwnedCards(OwnedCards);
             if (!File.Exists(PlayerDataFile)) { 
                 LoginWindow l = new LoginWindow();
                 l.ShowDialog();
@@ -53,11 +55,12 @@ namespace Gacha_Game_2 {
 
             // Load everything
             Player = FileHandler.LoadPlayerData();
+            OwnedCards = FileHandler.LoadOwnedCards();
 
             LoadCardsFromLocalDB();
             
             // If there are no cards in the files
-            if (OwnedCards.Count == 0) {
+            if (AllCards.Count == 0) {
                 NoCardsFoundErrorWindow n = new NoCardsFoundErrorWindow();
                 n.ShowDialog();
                 if (!n.ClosedCorrectly) Environment.Exit(0);
@@ -75,7 +78,7 @@ namespace Gacha_Game_2 {
             foreach (var cardDir in Directory.GetFiles(CardsDir)) {
                 try {
                     CardDir.Add(cardDir);
-                    OwnedCards.Add(JsonConvert.DeserializeObject<Card>(File.ReadAllText(cardDir)));
+                    AllCards.Add(JsonConvert.DeserializeObject<Card>(File.ReadAllText(cardDir)));
                 }
                 catch {
                     File.AppendAllText(LogFile, File.ReadAllText(cardDir) + " @" + DateTime.Now);
@@ -90,13 +93,14 @@ namespace Gacha_Game_2 {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void RollForCards_Click(object sender, RoutedEventArgs e) {
-            CardDropWindow c = new CardDropWindow(CardDir, Player, OwnedCards, DroppedCards);
+            CardDropWindow c = new CardDropWindow(CardDir, Player, AllCards, OwnedCards, DroppedCards);
             Hide();
             c.ShowDialog();
             Show();
-            OwnedCards = c.OwnedCards;
+            AllCards = c.AllCards;
             DroppedCards = c.DroppedCards;
             Player = c.Player;
+            OwnedCards = c.OwnedCards;
         }
 
         /// <summary>
@@ -105,7 +109,10 @@ namespace Gacha_Game_2 {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Inventory_Click(object sender, RoutedEventArgs e) {
-
+            InventoryWindow i = new InventoryWindow(OwnedCards, AllCards);
+            Hide();
+            i.ShowDialog();
+            Show();
         }
 
         /// <summary>

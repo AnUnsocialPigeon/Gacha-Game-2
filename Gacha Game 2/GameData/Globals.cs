@@ -13,6 +13,7 @@ namespace Gacha_Game_2.GameData {
         public static string CardsDir => Directory.GetCurrentDirectory() + @"\Cards\";
         public static string GameDataDir => Directory.GetCurrentDirectory() + @"\GameData\";
         public static string PlayerDataFile => GameDataDir + "PlayerData.dat";
+        public static string OwnedCardsFile => GameDataDir + "Cards.dat";
         public static string LogFile => GameDataDir + "Log.dat";
         public static string ServerDetailsFile => GameDataDir + "ServerInfo.txt";
         public static string BackgroundImgUrl => @"C:\Users\jdtur\OneDrive\VS\Gacha Game 2\Gacha Game 2\Assets\background_1.jpg";

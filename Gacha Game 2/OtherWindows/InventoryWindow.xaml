@@ -39,8 +39,6 @@
         </Style>
     </Window.Resources>
 
-    <Grid>
-        <ListBox Name="CardLSTBOX" HorizontalAlignment="Center" Background="#BB101010" Height="400" Margin="10,9,10,10" VerticalAlignment="Center" Width="472"/>
+    <ListBox Name="CardLSTBOX" HorizontalAlignment="Center" Background="#BB101010" Height="440" VerticalAlignment="Center" Width="490" Margin="0,0,2,-21"/>
 
-    </Grid>
 </Window>

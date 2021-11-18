@@ -76,7 +76,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="OtherWindows\CardDropWindow.xaml">
+    <Page Include="OtherWindows\CardRollWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -99,8 +99,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GameData\PlayerData.cs" />
-    <Compile Include="OtherWindows\CardDropWindow.xaml.cs">
-      <DependentUpon>CardDropWindow.xaml</DependentUpon>
+    <Compile Include="OtherWindows\CardRollWindow.xaml.cs">
+      <DependentUpon>CardRollWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="OtherWindows\InventoryWindow.xaml.cs">
       <DependentUpon>InventoryWindow.xaml</DependentUpon>
@@ -144,13 +144,19 @@
     <Resource Include="Assets\settings_cog.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Assets\background_3.jpg" />
+    <Resource Include="Assets\background_3.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Assets\background_2.jpg" />
+    <Resource Include="Assets\background_2.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Assets\background_1.jpg" />
+    <Resource Include="Assets\background_1.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="settings_cog.jpg" />

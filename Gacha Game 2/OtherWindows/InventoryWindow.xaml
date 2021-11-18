@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         x:Name="InvenWindow"
-        Title="Inventory" Height="450" Width="800">
+        Title="Inventory" Height="450" Width="500">
     <Window.Background>
         <ImageBrush ImageSource="{Binding ElementName=InvenWindow, Path=BgUri}" Stretch="UniformToFill"/>
     </Window.Background>
@@ -40,7 +40,7 @@
     </Window.Resources>
 
     <Grid>
-        <ListBox Name="CardLSTBOX" HorizontalAlignment="Center" Background="#BB101010" Height="400" Margin="10,10,9.6,10" VerticalAlignment="Center" Width="774"/>
+        <ListBox Name="CardLSTBOX" HorizontalAlignment="Center" Background="#BB101010" Height="400" Margin="10,9,10,10" VerticalAlignment="Center" Width="472"/>
 
     </Grid>
 </Window>

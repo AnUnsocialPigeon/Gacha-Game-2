@@ -19,7 +19,7 @@ namespace Gacha_Game_2.OtherWindows {
     /// Interaction logic for ShopWindow.xaml
     /// </summary>
     public partial class ShopWindow : Window {
-        public string BgUri => Globals.BackgroundImgUrl; 
+        public string BgUri => Globals.BackgroundImgFile; 
         public PlayerData Player = new PlayerData();
         public ShopWindow(PlayerData player) {
             Player = player;
@@ -28,8 +28,8 @@ namespace Gacha_Game_2.OtherWindows {
         }
 
         private void FormatInfoWindow(string extraInfo = "") {
-            PlayerInfoBox.Text = string.Format("Bal: {0}\nExtra Grabs: {1}\nExtra Drops: {2}\n\n{3}", 
-                Player.Money, Player.ExtraClaim, Player.ExtraRoll, extraInfo);
+            PlayerInfoBox.Text = string.Format("Bal: {0}g\nExtra Grabs: {1}\nExtra Drops: {2}\n\n{3}", 
+                Player.Money, Player.ExtraGrab, Player.ExtraRoll, extraInfo);
         }
 
         private void Buy_Click(object sender, RoutedEventArgs e) {
@@ -37,7 +37,7 @@ namespace Gacha_Game_2.OtherWindows {
                 case "Extra_Grab":
                     if (Player.Money >= 200) {
                         Player.Money -= 200;
-                        Player.ExtraClaim++;
+                        Player.ExtraGrab++;
                         FormatInfoWindow();
                     }
                     else FormatInfoWindow("Not enough money");

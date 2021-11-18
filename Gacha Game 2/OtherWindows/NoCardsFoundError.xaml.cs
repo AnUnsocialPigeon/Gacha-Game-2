@@ -2,6 +2,7 @@
 using Gacha_Game_2.GameData;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -21,7 +22,7 @@ namespace Gacha_Game_2.OtherWindows {
     /// Interaction logic for NoCardsFoundError.xaml
     /// </summary>
     public partial class NoCardsFoundErrorWindow : Window {
-        public string BgUri { get { return Globals.BackgroundImgUrl; } }
+        public string BgUri { get { return Globals.BackgroundImgFile; } }
         public bool ClosedCorrectly = false;
         List<Card> Cards = new List<Card>();
         public NoCardsFoundErrorWindow() {
@@ -71,6 +72,11 @@ namespace Gacha_Game_2.OtherWindows {
                 new Card("Taiga Aisaka", "Toradora!", 1),
                 new Card("Taiga Aisaka", "Toradora!", 2),
                 new Card("Taiga Aisaka", "Toradora!", 3)
+            };
+
+
+            byte[] BackgroundFile = new byte[] {
+
             };
 
             foreach (Card c in ManualCardAddition) FileHandler.SaveCardData(c);

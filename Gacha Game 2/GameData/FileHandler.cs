@@ -56,7 +56,7 @@ namespace Gacha_Game_2.GameData {
         /// </summary>
         /// <returns></returns>
         public static Dictionary<string, int> LoadOwnedCards() => JsonConvert.DeserializeObject<Dictionary<string, int>>(File.ReadAllText(Globals.OwnedCardsFile));
-        
+
 
 
         /// <summary>
@@ -65,7 +65,13 @@ namespace Gacha_Game_2.GameData {
         /// <param name="uri"></param>
         /// <returns></returns>
         public static Card LoadCardData(string uri) => JsonConvert.DeserializeObject<Card>(File.ReadAllText(uri));
-        
+
+        public static void SaveRolledCards(Card[] c) => File.WriteAllText(Globals.RolledCardsFile, JsonConvert.SerializeObject(c));
+        /// <summary>
+        /// Loading prev. dropped cards
+        /// </summary>
+        /// <returns></returns>
+        public static Card[] LoadRolledCards() => JsonConvert.DeserializeObject<Card[]>(File.ReadAllText(Globals.RolledCardsFile));
 
         public static string FormatCardSaveName(Card card) => string.Format("{0}{1}_{2}_{3}.dat", Globals.CardsDir, card.Name.Trim().Replace(' ', '-'), card.Anime.Trim().Replace(' ', '-'), card.Edition.ToString());
         #endregion

@@ -22,16 +22,16 @@ namespace Gacha_Game_2.OtherWindows {
     /// <summary>
     /// Interaction logic for CardDropWindow.xaml
     /// </summary>
-    public partial class CardDropWindow : Window {
-        public string BgUri { get { return Globals.BackgroundImgUrl; } }
+    public partial class CardRollWindow : Window {
+        public string BgUri { get { return Globals.BackgroundImgFile; } }
 
-        public Card[] DroppedCards;
+        public Card[] RolledCards;
         private List<string> CardUri;
         public Dictionary<string, int> OwnedCards = new Dictionary<string, int>();
         public List<Card> AllCards;
         public PlayerData Player;
         private Random rnd = new Random();
-        public CardDropWindow(List<string> cardUris, PlayerData playerData, List<Card> allCards, Dictionary<string, int> ownedCards, Card[] droppedCards) {
+        public CardRollWindow(List<string> cardUris, PlayerData playerData, List<Card> allCards, Dictionary<string, int> ownedCards, Card[] rolledCards) {
             InitializeComponent();
 
             // Setup
@@ -39,41 +39,44 @@ namespace Gacha_Game_2.OtherWindows {
             Player = playerData;
             AllCards = allCards;
             OwnedCards = ownedCards;
-            DroppedCards = droppedCards;
+            RolledCards = rolledCards;
 
             Grab1BTN.IsEnabled = false;
             Grab2BTN.IsEnabled = false;
             Grab3BTN.IsEnabled = false;
 
-            if (DroppedCards != null) DisplayCards();
+            if (RolledCards != null) DisplayCards();
 
             // Timer to update the DropBox
             Timer UpdateDrop = new Timer();
-            UpdateDrop.Elapsed += new ElapsedEventHandler(UpdateDropBox);
+            UpdateDrop.Elapsed += new ElapsedEventHandler(AsyncBoxUpdates);
             UpdateDrop.Interval = 100;
             UpdateDrop.Start();
         }
 
-        #region Roll and Drop
+        #region Roll
         /// <summary>
         /// Handler for the update drop box
         /// </summary>
         /// <param name="sourse"></param>
         /// <param name="e"></param>
-        private void UpdateDropBox(object sourse, ElapsedEventArgs e) {
-            string freeDrop = (Player.LastDropTime.AddMinutes(20).CompareTo(DateTime.Now) <= 0 ? "Now" :
-                (29 - (int)(DateTime.Now - Player.LastDropTime).TotalMinutes).ToString() + ":" +
-                (59 - (int)(DateTime.Now - Player.LastDropTime).TotalSeconds % 60).ToString());
-            string claim = (Player.LastClaimTime.AddMinutes(5).CompareTo(DateTime.Now) <= 0 ? "Now" :
-                (4 - (int)(DateTime.Now - Player.LastClaimTime).TotalMinutes).ToString() + ":" +
-                (59 - (int)(DateTime.Now - Player.LastClaimTime).TotalSeconds % 60).ToString());
+        private void AsyncBoxUpdates(object sourse, ElapsedEventArgs e) {
+            try {
+                string freeDrop = (Player.LastRollTime.AddMinutes(20).CompareTo(DateTime.Now) <= 0 ? "Now" :
+                    (29 - (int)(DateTime.Now - Player.LastRollTime).TotalMinutes).ToString() + ":" +
+                    (59 - (int)(DateTime.Now - Player.LastRollTime).TotalSeconds % 60).ToString());
+                string grab = (Player.LastGrabTime.AddMinutes(5).CompareTo(DateTime.Now) <= 0 ? "Now" :
+                    (4 - (int)(DateTime.Now - Player.LastGrabTime).TotalMinutes).ToString() + ":" +
+                    (59 - (int)(DateTime.Now - Player.LastGrabTime).TotalSeconds % 60).ToString());
 
-            _ = Dispatcher.Invoke(() => BalTXTBLOC.Text = string.Format("  Bal: {0}\n  Free drop: {1}\n  Claim: {2}\n  Extra Claims: {3}",
-                Player.Money, freeDrop, claim, Player.ExtraClaim));
-            Dispatcher.Invoke(() => {
-                if (RollBTN.Content.ToString() == "Roll" && freeDrop == "Now")
-                    _ = Dispatcher.Invoke(() => RollBTN.Content = "Roll (Free)");
-            });
+                _ = Dispatcher.Invoke(() => BalTXTBLOC.Text = string.Format("\n  Bal: {0}g\n  Free Drop: {1}\n  Grab: {2}\n  Extra Grabs: {3}\n  Extra Rolls: {4}",
+                    Player.Money, freeDrop, grab, Player.ExtraGrab, Player.ExtraRoll));
+                Dispatcher.Invoke(() => {
+                    if (RollBTN.Content.ToString() == "Roll" && freeDrop == "Now")
+                        _ = Dispatcher.Invoke(() => RollBTN.Content = "Roll (Free)");
+                });
+            }
+            catch { }
         }
 
         /// <summary>
@@ -83,9 +86,9 @@ namespace Gacha_Game_2.OtherWindows {
         /// <param name="e"></param>
         private void RollBTN_Click(object sender, RoutedEventArgs e) {
             // Taking the roll from them  
-            if (Player.LastDropTime.AddMinutes(30).CompareTo(DateTime.Now) <= 0) {
+            if (Player.LastRollTime.AddMinutes(30).CompareTo(DateTime.Now) <= 0) {
                 LogLSTBOX.Items.Add("Free drop used!");
-                Player.LastDropTime = DateTime.Now;
+                Player.LastRollTime = DateTime.Now;
             }
             else if (Player.ExtraRoll <= 0) {
                 return;
@@ -93,7 +96,7 @@ namespace Gacha_Game_2.OtherWindows {
             else Player.ExtraRoll--;
 
             // Updating the cards
-            DroppedCards = new Card[3] {
+            RolledCards = new Card[3] {
                 AllCards[rnd.Next(0, CardUri.Count)],
                 AllCards[rnd.Next(0, CardUri.Count)],
                 AllCards[rnd.Next(0, CardUri.Count)]
@@ -102,12 +105,13 @@ namespace Gacha_Game_2.OtherWindows {
             DisplayCards();
             RollBTN.Content = "Roll";
             FileHandler.SavePlayerData(Player);
+            FileHandler.SaveRolledCards(RolledCards);
         }
 
         private void DisplayCards() {
-            Img1.Source = new BitmapImage(new Uri(DroppedCards[0].ImgURL));
-            Img2.Source = new BitmapImage(new Uri(DroppedCards[1].ImgURL));
-            Img3.Source = new BitmapImage(new Uri(DroppedCards[2].ImgURL));
+            Img1.Source = new BitmapImage(new Uri(RolledCards[0].ImgURL));
+            Img2.Source = new BitmapImage(new Uri(RolledCards[1].ImgURL));
+            Img3.Source = new BitmapImage(new Uri(RolledCards[2].ImgURL));
 
             Grab1BTN.IsEnabled = true;
             Grab2BTN.IsEnabled = true;
@@ -121,15 +125,15 @@ namespace Gacha_Game_2.OtherWindows {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void GrabBTN_Click(object sender, RoutedEventArgs e) {
-            // Free claim
-            bool gratuity = (Player.LastClaimTime.AddMinutes(5).CompareTo(DateTime.Now) <= 0);
-            if (!gratuity && Player.ExtraClaim <= 0) {
-                LogLSTBOX.Items.Add("No Claims!");
+            // Free grab
+            bool gratuity = (Player.LastGrabTime.AddMinutes(5).CompareTo(DateTime.Now) <= 0);
+            if (!gratuity && Player.ExtraGrab <= 0) {
+                LogLSTBOX.Items.Insert(0, "No Grabs!");
                 return;
             }
 
             // Adding to cards
-            Card c = DroppedCards[int.Parse((sender as Button).Tag.ToString())];
+            Card c = RolledCards[int.Parse((sender as Button).Tag.ToString())];
             string uri = Formatter.FormatOwnedCards(c);
             if (OwnedCards.ContainsKey(uri)) OwnedCards[uri]++;
             else OwnedCards.Add(uri, 1);
@@ -138,11 +142,12 @@ namespace Gacha_Game_2.OtherWindows {
             FileHandler.SaveOwnedCards(OwnedCards);
 
             // Reprecussions
-            LogLSTBOX.Items.Add(string.Format("Card {0} has been claimed!", c.Name));
-            if (gratuity) Player.LastClaimTime = DateTime.Now;
+            (sender as Button).IsEnabled = false;
+            LogLSTBOX.Items.Insert(0, string.Format("Card {0} has been grabbed!", c.Name));
+            if (gratuity) Player.LastGrabTime = DateTime.Now;
             else {
-                Player.ExtraClaim--;
-                LogLSTBOX.Items.Add(string.Format("Extra Grab used! \nYou have {0} remaining.", Player.ExtraClaim));
+                Player.ExtraGrab--;
+                LogLSTBOX.Items.Insert(1, string.Format("Extra Grab used! \nYou have {0} remaining.", Player.ExtraGrab));
             }
             FileHandler.SavePlayerData(Player);
         }

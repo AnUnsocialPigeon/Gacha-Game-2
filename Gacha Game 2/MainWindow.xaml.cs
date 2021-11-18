@@ -24,13 +24,13 @@ namespace Gacha_Game_2 {
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
-        public string BgUri { get { return Globals.BackgroundImgUrl; } }
+        public string BgUri => BackgroundImgFile; 
 
         // Player Data
         public static PlayerData Player = new PlayerData();
         public static List<Card> AllCards = new List<Card>();
         public static Dictionary<string, int> OwnedCards = new Dictionary<string, int>();
-        public static Card[] DroppedCards = null;
+        public static Card[] RolledCards = null;
         public static List<string> CardDir = new List<string>();
 
         /// <summary>
@@ -44,6 +44,7 @@ namespace Gacha_Game_2 {
             if (!File.Exists(LogFile)) File.WriteAllText(LogFile, "");
             if (!File.Exists(ServerDetailsFile)) File.WriteAllText(ServerDetailsFile, "");
             if (!File.Exists(OwnedCardsFile)) FileHandler.SaveOwnedCards(OwnedCards);
+            if (!File.Exists(RolledCardsFile)) FileHandler.SaveRolledCards(RolledCards);
             if (!File.Exists(PlayerDataFile)) { 
                 LoginWindow l = new LoginWindow();
                 l.ShowDialog();
@@ -56,6 +57,7 @@ namespace Gacha_Game_2 {
             // Load everything
             Player = FileHandler.LoadPlayerData();
             OwnedCards = FileHandler.LoadOwnedCards();
+            RolledCards = FileHandler.LoadRolledCards();
 
             LoadCardsFromLocalDB();
             
@@ -93,12 +95,12 @@ namespace Gacha_Game_2 {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void RollForCards_Click(object sender, RoutedEventArgs e) {
-            CardDropWindow c = new CardDropWindow(CardDir, Player, AllCards, OwnedCards, DroppedCards);
+            CardRollWindow c = new CardRollWindow(CardDir, Player, AllCards, OwnedCards, RolledCards);
             Hide();
             c.ShowDialog();
             Show();
             AllCards = c.AllCards;
-            DroppedCards = c.DroppedCards;
+            RolledCards = c.RolledCards;
             Player = c.Player;
             OwnedCards = c.OwnedCards;
         }

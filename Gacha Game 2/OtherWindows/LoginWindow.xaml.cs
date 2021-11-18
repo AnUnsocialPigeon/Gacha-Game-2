@@ -18,7 +18,7 @@ namespace Gacha_Game_2.OtherWindows {
     /// Interaction logic for LoginWindow.xaml
     /// </summary>
     public partial class LoginWindow : Window {
-        public string BgUri { get { return Globals.BackgroundImgUrl; } }
+        public string BgUri { get { return Globals.BackgroundImgFile; } }
 
         public bool SubmitName = false;
         public LoginWindow() {

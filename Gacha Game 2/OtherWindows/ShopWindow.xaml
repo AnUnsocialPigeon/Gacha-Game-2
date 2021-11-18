@@ -16,7 +16,7 @@
             <Setter Property="FontFamily" Value="Consolas"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="BorderThickness" Value="3"/>
-            <Setter Property="BorderBrush" Value="#FF303030"/>
+            <Setter Property="BorderBrush" Value="#FFFFAAAA"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
@@ -28,20 +28,21 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#BB303030"/>
+                    <Setter Property="Background" Value="#DD303030"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
 
         <Style TargetType="TextBlock">
             <Setter Property="FontFamily" Value="Consolas"/>
-            <Setter Property="Background" Value="#BB101010"/>
+            <Setter Property="Background" Value="#bb203030"/>
+            <Setter Property="FontSize" Value="20"/>
             <Setter Property="Foreground" Value="White"/>
         </Style>
     </Window.Resources>
 
     <UniformGrid>
-        <TextBlock Name="PlayerInfoBox"/>
+        <TextBlock Name="PlayerInfoBox" Margin="0,0,5,5"/>
         <Button Name="Extra_Grab" Content="Extra Grab (200g)" Click="Buy_Click"/>
         <Button Name="Extra_Roll" Content="Extra Roll (400g)" Click="Buy_Click"/>
     </UniformGrid>

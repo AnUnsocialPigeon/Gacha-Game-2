@@ -20,7 +20,7 @@ namespace Gacha_Game_2.OtherWindows {
     /// Interaction logic for InventoryWindow.xaml
     /// </summary>
     public partial class InventoryWindow : Window {
-        public string BgUri { get { return Globals.BackgroundImgUrl; } }
+        public string BgUri { get { return Globals.BackgroundImgFile; } }
 
         public Dictionary<string, int> OwnedCards = new Dictionary<string, int>();
         public List<Card> AllCards = new List<Card>();
@@ -44,20 +44,41 @@ namespace Gacha_Game_2.OtherWindows {
             // Finding all cards that the user owns
             foreach (Card c in AllCards) {
                 if (OwnedCards.ContainsKey(Formatter.FormatOwnedCards(c))) {
+                    int width = (int)CardLSTBOX.Width;
+
+                    // Creating the inventory item
                     UniformGrid g = new UniformGrid {
-                        Width = 300
+                        Width = width - 20,
+                        Height = 100,
+                        Columns = 3
+                        
+                    };
+                    Image i = new Image {
+                        Source = new BitmapImage(new Uri(c.ImgURL)),
+                        Width = 80,
+                        Height = 100,
+                        Stretch = Stretch.UniformToFill,
+                        //HorizontalAlignment = HorizontalAlignment.Left,
+                        //Margin = new Thickness(0, 0, width - 80, 0)
                     };
                     TextBlock t = new TextBlock {
                         Text = c.Name + "\n" + c.Anime + "\n" + OwnedCards[Formatter.FormatOwnedCards(c)],
                         Background = new SolidColorBrush(Color.FromArgb(187, 16, 16, 16)),
-                        Foreground = new SolidColorBrush(Color.FromArgb(187, 255, 255, 255))
+                        Foreground = new SolidColorBrush(Color.FromArgb(187, 255, 255, 255)),
+                        //HorizontalAlignment = HorizontalAlignment.Center,
+                        //Margin = new Thickness(85, 0, 105, 0)
                     };
                     Button b = new Button {
                         Content = string.Format("Sell for {0}", (c.Rarity * 200) + (c.Level * 20)),
-                        Tag = Formatter.FormatOwnedCards(c)
+                        Tag = Formatter.FormatOwnedCards(c),
+                        //HorizontalAlignment = HorizontalAlignment.Right,
+                        //Margin = new Thickness(width - 100, 0, 0, 0)
                     };
                     b.Click += new RoutedEventHandler(SellBTN_Click);
+
+                    // Adding the inventory item to the lsit
                     UniformGrid u = new UniformGrid();
+                    u.Children.Add(i);
                     u.Children.Add(t);
                     u.Children.Add(b);
                     CardLSTBOX.Items.Add(u);

@@ -121,7 +121,20 @@ namespace Gacha_Game_2 {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Battle_Click(object sender, RoutedEventArgs e) {
+            
+        }
 
+        /// <summary>
+        /// Shop button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Shop_Click(object sender, RoutedEventArgs e) {
+            ShopWindow s = new ShopWindow(Player);
+            Hide();
+            s.ShowDialog();
+            Show();
+            Player = s.Player;
         }
         #endregion
     }

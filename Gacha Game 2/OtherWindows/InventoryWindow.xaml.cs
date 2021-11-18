@@ -28,8 +28,18 @@ namespace Gacha_Game_2.OtherWindows {
 
 
         public InventoryWindow(Dictionary<string, int> ownedCards, List<Card> allCards) {
+            InitializeComponent();
             AllCards = allCards;
             OwnedCards = ownedCards;
+
+            RefreshInventory();
+
+        }
+
+        private void RefreshInventory() {
+            // Clear
+            CardLSTBOX.Items.Clear();
+
 
             // Finding all cards that the user owns
             foreach (Card c in AllCards) {
@@ -44,9 +54,7 @@ namespace Gacha_Game_2.OtherWindows {
                     };
                     Button b = new Button {
                         Content = string.Format("Sell for {0}", (c.Rarity * 200) + (c.Level * 20)),
-                        Tag = Formatter.FormatOwnedCards(c),
-                        //Background = new SolidColorBrush(Color.FromArgb(187, 32, 32, 32)),
-                        //Foreground = new SolidColorBrush(Color.FromArgb(187, 255, 255, 255))
+                        Tag = Formatter.FormatOwnedCards(c)
                     };
                     b.Click += new RoutedEventHandler(SellBTN_Click);
                     UniformGrid u = new UniformGrid();
@@ -54,12 +62,14 @@ namespace Gacha_Game_2.OtherWindows {
                     u.Children.Add(b);
                     CardLSTBOX.Items.Add(u);
                 }
-                InitializeComponent();
             }
-
         }
-        public void SellBTN_Click(object sender, RoutedEventArgs e) {
 
+        public void SellBTN_Click(object sender, RoutedEventArgs e) {
+            OwnedCards[(sender as Button).Tag.ToString()]--;
+            if (OwnedCards[(sender as Button).Tag.ToString()] <= 0) OwnedCards.Remove((sender as Button).Tag.ToString());
+            FileHandler.SaveOwnedCards(OwnedCards);
+            RefreshInventory();
         }
     }
 }

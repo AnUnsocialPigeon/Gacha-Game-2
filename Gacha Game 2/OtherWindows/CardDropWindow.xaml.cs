@@ -31,7 +31,7 @@ namespace Gacha_Game_2.OtherWindows {
         public List<Card> AllCards;
         public PlayerData Player;
         private Random rnd = new Random();
-        public CardDropWindow(List<string> cardUris, PlayerData playerData,  List<Card> allCards, Dictionary<string, int> ownedCards, Card[]droppedCards) {
+        public CardDropWindow(List<string> cardUris, PlayerData playerData, List<Card> allCards, Dictionary<string, int> ownedCards, Card[] droppedCards) {
             InitializeComponent();
 
             // Setup
@@ -71,7 +71,7 @@ namespace Gacha_Game_2.OtherWindows {
             _ = Dispatcher.Invoke(() => BalTXTBLOC.Text = string.Format("  Bal: {0}\n  Free drop: {1}\n  Claim: {2}\n  Extra Claims: {3}",
                 Player.Money, freeDrop, claim, Player.ExtraClaim));
             Dispatcher.Invoke(() => {
-                if (RollBTN.Content.ToString() == "Roll (Cost: 500)" && freeDrop == "Now")
+                if (RollBTN.Content.ToString() == "Roll" && freeDrop == "Now")
                     _ = Dispatcher.Invoke(() => RollBTN.Content = "Roll (Free)");
             });
         }
@@ -85,13 +85,12 @@ namespace Gacha_Game_2.OtherWindows {
             // Taking the roll from them  
             if (Player.LastDropTime.AddMinutes(30).CompareTo(DateTime.Now) <= 0) {
                 LogLSTBOX.Items.Add("Free drop used!");
+                Player.LastDropTime = DateTime.Now;
             }
-            else if (Player.Money <= 500) {
+            else if (Player.ExtraRoll <= 0) {
                 return;
             }
-            else Player.Money -= 500;
-
-            Player.LastDropTime = DateTime.Now;
+            else Player.ExtraRoll--;
 
             // Updating the cards
             DroppedCards = new Card[3] {
@@ -101,7 +100,7 @@ namespace Gacha_Game_2.OtherWindows {
             };
 
             DisplayCards();
-            RollBTN.Content = "Roll (Cost: 500)";
+            RollBTN.Content = "Roll";
             FileHandler.SavePlayerData(Player);
         }
 

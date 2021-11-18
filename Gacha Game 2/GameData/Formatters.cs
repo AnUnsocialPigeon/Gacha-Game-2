@@ -9,7 +9,7 @@ namespace Gacha_Game_2.GameData {
     public class Formatter {
         public static string FormatOwnedCards(Card c) {
             string[] a = FileHandler.FormatCardSaveName(c).Split('.')[0].Split('\\');
-            return a[a.Length - 1];
+            return a[a.Length - 1] + "|" + c.Level + "|" + c.Rarity;
         }
     }
 }

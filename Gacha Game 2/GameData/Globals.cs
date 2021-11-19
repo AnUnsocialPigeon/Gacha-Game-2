@@ -17,6 +17,6 @@ namespace Gacha_Game_2.GameData {
         public static string LogFile => GameDataDir + "Log.dat";
         public static string ServerDetailsFile => GameDataDir + "ServerInfo.txt";
         public static string RolledCardsFile => GameDataDir + "DropData.dat";
-        public static string BackgroundImgFile => @"D:\C#\Gacha Game 2\Gacha Game 2\Assets\background_1.jpg";
+        public static string BackgroundImgFile => @"C:\Users\jdtur\OneDrive\VS\Gacha Game 2\Gacha Game 2\Assets\background_1.jpg";
     }
 }

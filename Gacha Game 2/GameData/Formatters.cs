@@ -11,5 +11,8 @@ namespace Gacha_Game_2.GameData {
             string[] a = FileHandler.FormatCardSaveName(c).Split('.')[0].Split('\\');
             return a[a.Length - 1] + "|" + c.Level + "|" + c.Rarity;
         }
+
+        public static string FormatInvenInfoTextBlock(Card c, Dictionary<string, int> OwnedCards) =>
+            c.Name + "\n" + c.Anime + "\nOwned Copies: " + OwnedCards[FormatOwnedCards(c)] + "\nEd: " + c.Edition;
     }
 }

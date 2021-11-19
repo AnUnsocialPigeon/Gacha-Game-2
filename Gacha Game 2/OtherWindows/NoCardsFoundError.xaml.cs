@@ -60,7 +60,7 @@ namespace Gacha_Game_2.OtherWindows {
                 new Card("Momonga", "Overlord", 1, "http://d2l56h9h5tj8ue.cloudfront.net/images/cards/momonga-overlord-1.jpg"),
                 new Card("Momonga", "Overlord", 2, "http://d2l56h9h5tj8ue.cloudfront.net/images/cards/momonga-overlord-2.jpg"),
                 new Card("Momonga", "Overlord", 3, "http://d2l56h9h5tj8ue.cloudfront.net/images/cards/momonga-overlord-3.jpg"),
-                new Card("Momonga", "Overlord", 3, "http://d2l56h9h5tj8ue.cloudfront.net/images/cards/momonga-overlord-3.jpg"),
+                new Card("Momonga", "Overlord", 4, "http://d2l56h9h5tj8ue.cloudfront.net/images/cards/momonga-overlord-3.jpg"),
                 new Card("Shalltear Bloodfallen", "Overlord", 1),
                 new Card("Shalltear Bloodfallen", "Overlord", 2),
                 new Card("Shalltear Bloodfallen", "Overlord", 3),

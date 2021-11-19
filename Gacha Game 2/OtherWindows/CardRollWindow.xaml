@@ -42,15 +42,24 @@
         <ImageBrush ImageSource="{Binding ElementName=CardDrop, Path=BgUri}" Stretch="UniformToFill"/>
     </Window.Background>
     <Grid>
-        <Button Name="RollBTN" Content="Roll" HorizontalAlignment="Center" Margin="540,10,9.6,278.2" VerticalAlignment="Center" Width="244" Height="51" FontSize="24" Click="RollBTN_Click"/>
-        <TextBlock Name="BalTXTBLOC" FontSize="14" HorizontalAlignment="Center" Margin="540,66,10,159" TextWrapping="Wrap" VerticalAlignment="Center" Height="115" Width="244" LineHeight="10" Text="Hello" FontWeight="Bold"/>
-        <Image Name="Img1" HorizontalAlignment="Left" Height="270" Margin="10,10,0,0" VerticalAlignment="Top" Width="160"/>
-        <Image Name="Img2" HorizontalAlignment="Left" Height="270" Margin="175,10,0,0" VerticalAlignment="Top" Width="160"/>
-        <Image Name="Img3" HorizontalAlignment="Left" Height="270" Margin="340,10,0,0" VerticalAlignment="Top" Width="160"/>
+        <Button Name="RollBTN" Content="Roll" HorizontalAlignment="Center" Margin="516,10,9.6,278.2" VerticalAlignment="Center" Width="268" Height="51" FontSize="24" Click="RollBTN_Click"/>
+        <TextBlock Name="BalTXTBLOC" FontSize="14" HorizontalAlignment="Center" Margin="515,66,9.6,158.2" TextWrapping="Wrap" VerticalAlignment="Center" Height="115" Width="269" LineHeight="10" Text="Hello" FontWeight="Bold"/>
+        <Border Name="Img1Border" BorderThickness="5" BorderBrush="#FFFFFFFF" Margin="10,10,623.6,114.2">
+            <Image Name="Img1" HorizontalAlignment="Left" Height="198" Margin="0.2,0.2,0,0" VerticalAlignment="Top" Width="145"/>
+        </Border>
+        <Border Name="Img2Border" BorderThickness="5" BorderBrush="#FFFFFFFF" Margin="175,10,458.6,114.2">
+            <Image Name="Img2" HorizontalAlignment="Left" Height="198" Margin="0.2,0.2,0,0" VerticalAlignment="Top" Width="145"/>
+        </Border>
+        <Border Name="Img3Border" BorderThickness="5" BorderBrush="#FFFFFFFF" Margin="340,10,293.6,114.2">
+            <Image Name="Img3" HorizontalAlignment="Left" Height="198" Margin="0.2,0.2,0,0" VerticalAlignment="Top" Width="145"/>
+        </Border>
         <Button x:Name="Grab1BTN" Tag="0" Content="Grab" HorizontalAlignment="Left" Margin="10,285,0,0" VerticalAlignment="Top" Width="160" Height="44" FontSize="24" Click="GrabBTN_Click"/>
         <Button x:Name="Grab2BTN" Tag="1" Content="Grab" HorizontalAlignment="Left" Margin="175,285,0,0" VerticalAlignment="Top" Width="160" Height="44" FontSize="24" Click="GrabBTN_Click"/>
         <Button x:Name="Grab3BTN" Tag="2" Content="Grab" HorizontalAlignment="Left" Margin="340,285,0,0" VerticalAlignment="Top" Width="160" Height="44" FontSize="24" Click="GrabBTN_Click"/>
-        <ListBox Name="LogLSTBOX" Background="#BB202020" Foreground="White" HorizontalAlignment="Center" Height="143" Margin="540,186,10,11" VerticalAlignment="Center" Width="244"/>
+        <ListBox Name="LogLSTBOX" Background="#BB202020" Foreground="White" HorizontalAlignment="Center" Height="143" Margin="516,186,9.6,10.2" VerticalAlignment="Center" Width="268"/>
+        <TextBlock Name="GrabCardInfoTXTBLOCK1" HorizontalAlignment="Left" Margin="10,230,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="50" Width="160" TextAlignment="Center"/>
+        <TextBlock Name="GrabCardInfoTXTBLOCK2" HorizontalAlignment="Left" Margin="175,230,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="50" Width="160" TextAlignment="Center"/>
+        <TextBlock Name="GrabCardInfoTXTBLOCK3" HorizontalAlignment="Left" Margin="340,230,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="50" Width="160" TextAlignment="Center"/>
 
     </Grid>
 </Window>

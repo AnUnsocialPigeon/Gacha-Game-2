@@ -20,6 +20,7 @@ namespace Gacha_Game_2.Classes {
         public int Money { get; set; }
         public DateTime LastRollTime { get; set; }
         public DateTime LastGrabTime { get; set; }
+        public DateTime LastDailyTime { get; set; }
         public int ExtraGrab { get; set; }
         public int ExtraRoll { get; set; }
     }

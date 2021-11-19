@@ -43,7 +43,7 @@
 
     <UniformGrid>
         <TextBlock Name="PlayerInfoBox" Margin="0,0,5,5"/>
-        <Button Name="Extra_Grab" Content="Extra Grab (200g)" Click="Buy_Click"/>
-        <Button Name="Extra_Roll" Content="Extra Roll (400g)" Click="Buy_Click"/>
+        <Button Name="Extra_Grab" Content="Extra Grab (400g)" Click="Buy_Click" FontSize="30"/>
+        <Button Name="Extra_Roll" Content="Extra Roll (500g)" Click="Buy_Click" FontSize="30"/>
     </UniformGrid>
 </Window>

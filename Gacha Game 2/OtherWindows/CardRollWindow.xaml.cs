@@ -17,6 +17,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Color = System.Windows.Media.Color;
 
 namespace Gacha_Game_2.OtherWindows {
     /// <summary>
@@ -24,6 +25,14 @@ namespace Gacha_Game_2.OtherWindows {
     /// </summary>
     public partial class CardRollWindow : Window {
         public string BgUri { get { return Globals.BackgroundImgFile; } }
+
+        // BorderBrush Colors for the cards depending on their ED
+        public SolidColorBrush[] ColorED = new SolidColorBrush[]{
+            new SolidColorBrush(Color.FromArgb(255, 128, 128, 128)),
+            new SolidColorBrush(Color.FromArgb(255, 100, 164, 164)),
+            new SolidColorBrush(Color.FromArgb(255, 164, 164, 100)),
+            new SolidColorBrush(Color.FromArgb(255, 255, 50, 50)),
+        };
 
         public Card[] RolledCards;
         private List<string> CardUri;
@@ -44,6 +53,9 @@ namespace Gacha_Game_2.OtherWindows {
             Grab1BTN.IsEnabled = false;
             Grab2BTN.IsEnabled = false;
             Grab3BTN.IsEnabled = false;
+            Grab1BTN.Opacity = 0.5d;
+            Grab2BTN.Opacity = 0.5d;
+            Grab3BTN.Opacity = 0.5d;
 
             if (RolledCards != null) DisplayCards();
 
@@ -62,13 +74,12 @@ namespace Gacha_Game_2.OtherWindows {
         /// <param name="e"></param>
         private void AsyncBoxUpdates(object sourse, ElapsedEventArgs e) {
             try {
-                string freeDrop = (Player.LastRollTime.AddMinutes(20).CompareTo(DateTime.Now) <= 0 ? "Now" :
-                    (29 - (int)(DateTime.Now - Player.LastRollTime).TotalMinutes).ToString() + ":" +
-                    (59 - (int)(DateTime.Now - Player.LastRollTime).TotalSeconds % 60).ToString());
-                string grab = (Player.LastGrabTime.AddMinutes(5).CompareTo(DateTime.Now) <= 0 ? "Now" :
-                    (4 - (int)(DateTime.Now - Player.LastGrabTime).TotalMinutes).ToString() + ":" +
-                    (59 - (int)(DateTime.Now - Player.LastGrabTime).TotalSeconds % 60).ToString());
+                string freeDrop = Player.LastRollTime.AddMinutes(20).CompareTo(DateTime.Now) <= 0 ? "Now" :
+                    Formatter.GetTimeSince(Player.LastRollTime);
+                string grab = Player.LastGrabTime.AddMinutes(5).CompareTo(DateTime.Now) <= 0 ? "Now" :
+                    Formatter.GetTimeSince(Player.LastRollTime);
 
+                // Updating
                 _ = Dispatcher.Invoke(() => BalTXTBLOC.Text = string.Format("\n  Bal: {0}g\n  Free Drop: {1}\n  Grab: {2}\n  Extra Grabs: {3}\n  Extra Rolls: {4}",
                     Player.Money, freeDrop, grab, Player.ExtraGrab, Player.ExtraRoll));
                 Dispatcher.Invoke(() => {
@@ -112,10 +123,19 @@ namespace Gacha_Game_2.OtherWindows {
             Img1.Source = new BitmapImage(new Uri(RolledCards[0].ImgURL));
             Img2.Source = new BitmapImage(new Uri(RolledCards[1].ImgURL));
             Img3.Source = new BitmapImage(new Uri(RolledCards[2].ImgURL));
+            Img1Border.BorderBrush = ColorED[RolledCards[0].Edition - 1];
+            Img2Border.BorderBrush = ColorED[RolledCards[1].Edition - 1];
+            Img3Border.BorderBrush = ColorED[RolledCards[2].Edition - 1];
+            GrabCardInfoTXTBLOCK1.Text = RolledCards[0].Name + "\nED: " + RolledCards[0].Edition;
+            GrabCardInfoTXTBLOCK2.Text = RolledCards[1].Name + "\nED: " + RolledCards[1].Edition;
+            GrabCardInfoTXTBLOCK3.Text = RolledCards[2].Name + "\nED: " + RolledCards[2].Edition;
 
             Grab1BTN.IsEnabled = true;
             Grab2BTN.IsEnabled = true;
             Grab3BTN.IsEnabled = true;
+            Grab1BTN.Opacity = 1d;
+            Grab2BTN.Opacity = 1d;
+            Grab3BTN.Opacity = 1d;
         }
         #endregion
 
@@ -143,12 +163,16 @@ namespace Gacha_Game_2.OtherWindows {
 
             // Reprecussions
             (sender as Button).IsEnabled = false;
+            (sender as Button).Opacity = 0.5d;
+
             LogLSTBOX.Items.Insert(0, string.Format("Card {0} has been grabbed!", c.Name));
+
             if (gratuity) Player.LastGrabTime = DateTime.Now;
             else {
                 Player.ExtraGrab--;
-                LogLSTBOX.Items.Insert(1, string.Format("Extra Grab used! \nYou have {0} remaining.", Player.ExtraGrab));
+                LogLSTBOX.Items.Insert(1, string.Format("Extra Grab used!\nYou have {0} remaining.", Player.ExtraGrab));
             }
+
             FileHandler.SavePlayerData(Player);
         }
 

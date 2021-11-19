@@ -111,10 +111,13 @@ namespace Gacha_Game_2 {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Inventory_Click(object sender, RoutedEventArgs e) {
-            InventoryWindow i = new InventoryWindow(OwnedCards, AllCards);
+            InventoryWindow i = new InventoryWindow(OwnedCards, AllCards, Player);
             Hide();
             i.ShowDialog();
             Show();
+            Player = i.Player;
+            OwnedCards = i.OwnedCards;
+            AllCards = i.AllCards;
         }
 
         /// <summary>
@@ -139,5 +142,9 @@ namespace Gacha_Game_2 {
             Player = s.Player;
         }
         #endregion
+
+        private void DailyBTN_Click(object sender, RoutedEventArgs e) {
+
+        }
     }
 }

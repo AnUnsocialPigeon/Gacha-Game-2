@@ -14,9 +14,5 @@ namespace Gacha_Game_2.GameData {
 
         public static string FormatInvenInfoTextBlock(Card c, Dictionary<string, int> OwnedCards) =>
             c.Name + "\n" + c.Anime + "\nOwned Copies: " + OwnedCards[FormatOwnedCards(c)] + "\nEd: " + c.Edition;
-
-        public static string GetTimeSince(DateTime from) => 
-            (29 - (int)(DateTime.Now - from).TotalMinutes).ToString() + ":" + 
-            (59 - (int)(DateTime.Now - from).TotalSeconds % 60).ToString();
     }
 }

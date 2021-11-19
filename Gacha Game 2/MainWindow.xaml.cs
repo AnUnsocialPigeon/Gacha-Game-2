@@ -18,13 +18,14 @@ using static Gacha_Game_2.GameData.Globals;
 using Gacha_Game_2.OtherWindows;
 using Gacha_Game_2.GameData;
 using Newtonsoft.Json;
+using System.Timers;
 
 namespace Gacha_Game_2 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
-        public string BgUri => BackgroundImgFile; 
+        public string BgUri => BackgroundImgFile;
 
         // Player Data
         public static PlayerData Player = new PlayerData();
@@ -45,10 +46,10 @@ namespace Gacha_Game_2 {
             if (!File.Exists(ServerDetailsFile)) File.WriteAllText(ServerDetailsFile, "");
             if (!File.Exists(OwnedCardsFile)) FileHandler.SaveOwnedCards(OwnedCards);
             if (!File.Exists(RolledCardsFile)) FileHandler.SaveRolledCards(RolledCards);
-            if (!File.Exists(PlayerDataFile)) { 
+            if (!File.Exists(PlayerDataFile)) {
                 LoginWindow l = new LoginWindow();
                 l.ShowDialog();
-                if (!l.SubmitName) 
+                if (!l.SubmitName)
                     Environment.Exit(0);
                 Player = new PlayerData(l.Username.Text, 2500);
                 FileHandler.SavePlayerData(Player);
@@ -60,7 +61,7 @@ namespace Gacha_Game_2 {
             RolledCards = FileHandler.LoadRolledCards();
 
             LoadCardsFromLocalDB();
-            
+
             // If there are no cards in the files
             if (AllCards.Count == 0) {
                 NoCardsFoundErrorWindow n = new NoCardsFoundErrorWindow();
@@ -68,8 +69,15 @@ namespace Gacha_Game_2 {
                 if (!n.ClosedCorrectly) Environment.Exit(0);
                 LoadCardsFromLocalDB();
             }
-            
+
             InitializeComponent();
+
+            // Timers
+            DailyBTN.IsEnabled = false;
+            Timer dailyTimer = new Timer();
+            dailyTimer.Elapsed += new ElapsedEventHandler(TimerUpdates);
+            dailyTimer.Interval = 100;
+            dailyTimer.Start();
         }
 
         /// <summary>
@@ -126,7 +134,7 @@ namespace Gacha_Game_2 {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Battle_Click(object sender, RoutedEventArgs e) {
-            
+
         }
 
         /// <summary>
@@ -143,8 +151,25 @@ namespace Gacha_Game_2 {
         }
         #endregion
 
+        /// <summary>
+        /// When the daily button is clicked
+        /// NEEDS UPDATING - money balanced = no
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DailyBTN_Click(object sender, RoutedEventArgs e) {
+            Player.LastDailyTime = DateTime.Now;
+            (sender as Button).IsEnabled = false;
+            Player.Money += 1000;
+        }
 
+        private void TimerUpdates(object sender, ElapsedEventArgs e) {
+            string daily = Player.LastDailyTime.AddHours(6).CompareTo(DateTime.Now) <= 0 ? "Now" :
+                    (5 - (int)(DateTime.Now - Player.LastDailyTime).TotalHours).ToString() + ":" +
+                    (59 - (int)(DateTime.Now - Player.LastDailyTime).TotalMinutes).ToString() + ":" +
+                    (59 - (int)(DateTime.Now - Player.LastDailyTime).TotalSeconds % 60).ToString();
+            Dispatcher.Invoke(() => { if (daily == "Now" && !DailyBTN.IsEnabled) DailyBTN.IsEnabled = true; }); 
+            _ = Dispatcher.Invoke(() => DailyBTN.Content = string.Format("Daily ({0})", daily));
         }
     }
 }

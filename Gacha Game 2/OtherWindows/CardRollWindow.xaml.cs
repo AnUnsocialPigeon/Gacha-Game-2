@@ -75,9 +75,11 @@ namespace Gacha_Game_2.OtherWindows {
         private void AsyncBoxUpdates(object sourse, ElapsedEventArgs e) {
             try {
                 string freeDrop = Player.LastRollTime.AddMinutes(20).CompareTo(DateTime.Now) <= 0 ? "Now" :
-                    Formatter.GetTimeSince(Player.LastRollTime);
+                    (29 - (int)(DateTime.Now - Player.LastRollTime).TotalMinutes).ToString() + ":" +
+                    (59 - (int)(DateTime.Now - Player.LastRollTime).TotalSeconds % 60).ToString();
                 string grab = Player.LastGrabTime.AddMinutes(5).CompareTo(DateTime.Now) <= 0 ? "Now" :
-                    Formatter.GetTimeSince(Player.LastRollTime);
+                    (29 - (int)(DateTime.Now - Player.LastGrabTime).TotalMinutes).ToString() + ":" +
+                    (59 - (int)(DateTime.Now - Player.LastGrabTime).TotalSeconds % 60).ToString();
 
                 // Updating
                 _ = Dispatcher.Invoke(() => BalTXTBLOC.Text = string.Format("\n  Bal: {0}g\n  Free Drop: {1}\n  Grab: {2}\n  Extra Grabs: {3}\n  Extra Rolls: {4}",
@@ -98,7 +100,7 @@ namespace Gacha_Game_2.OtherWindows {
         private void RollBTN_Click(object sender, RoutedEventArgs e) {
             // Taking the roll from them  
             if (Player.LastRollTime.AddMinutes(30).CompareTo(DateTime.Now) <= 0) {
-                LogLSTBOX.Items.Add("Free drop used!");
+                LogLSTBOX.Items.Insert(0, "Free drop used!");
                 Player.LastRollTime = DateTime.Now;
             }
             else if (Player.ExtraRoll <= 0) {

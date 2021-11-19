@@ -40,6 +40,6 @@
     </Window.Resources>
     <Grid>
         <ListBox Name="CardLSTBOX" HorizontalAlignment="Center" Background="#BB101010" Width="490" Margin="0, 105, 0, 0"/>
-        <TextBlock Name="InfoTXTBLOCK" Margin="10,10,10,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Height="90"/>
+        <TextBlock Name="InfoTXTBLOCK" Margin="10,10,10,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="90"/>
     </Grid>
 </Window>

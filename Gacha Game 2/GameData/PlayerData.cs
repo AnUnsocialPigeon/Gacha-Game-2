@@ -12,12 +12,14 @@ namespace Gacha_Game_2.Classes {
             Money = money;
             LastRollTime = new DateTime(2000, 1, 1);
             LastGrabTime = new DateTime(2000, 1, 1);
+            LastDailyTime = new DateTime(2000, 1, 1);
             ExtraGrab = 0;
             ExtraRoll = 0;
         }
 
         public string Username { get; set; }
         public int Money { get; set; }
+        public int Tickets { get; set; }
         public DateTime LastRollTime { get; set; }
         public DateTime LastGrabTime { get; set; }
         public DateTime LastDailyTime { get; set; }

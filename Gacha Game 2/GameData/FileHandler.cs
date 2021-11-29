@@ -57,6 +57,15 @@ namespace Gacha_Game_2.GameData {
         /// <returns></returns>
         public static Dictionary<string, int> LoadOwnedCards() => JsonConvert.DeserializeObject<Dictionary<string, int>>(File.ReadAllText(Globals.OwnedCardsFile));
 
+        /// <summary>
+        /// Deletes all cards given in the CardDir 
+        /// </summary>
+        /// <param name="CardDir"></param>
+        public static void DeleteAllFiles(List<string> CardDir) {
+            foreach (string s in CardDir) {
+                File.Delete(s);
+            }
+        }
 
 
         /// <summary>

@@ -24,7 +24,7 @@ namespace Gacha_Game_2.OtherWindows {
         public string BgUri { get { return Globals.BackgroundImgFile; } }
 
         public Dictionary<string, int> OwnedCards = new Dictionary<string, int>();
-        public List<Card> AllCards = new List<Card>();
+        public List<Card>[] AllCards = new List<Card>[4];
         public PlayerData Player = new PlayerData();
 
         private Border CardImageTemplate = new Border();
@@ -34,13 +34,8 @@ namespace Gacha_Game_2.OtherWindows {
         /// </summary>
         /// <param name="ownedCards"></param>
         /// <param name="allCards"></param>
-        public InventoryWindow(Dictionary<string, int> ownedCards, List<Card> allCards, PlayerData player) {
+        public InventoryWindow(Dictionary<string, int> ownedCards, List<Card>[] allCards, PlayerData player) {
             InitializeComponent();
-
-            // Loading the image border template
-            //CardImageTemplate = ImgBorder;
-            //MainGrid.Children.Remove(ImgBorder);
-            //(CardImageTemplate.Parent as Grid).Children.Remove(CardImageTemplate);
 
             AllCards = allCards;
             OwnedCards = ownedCards;
@@ -48,10 +43,12 @@ namespace Gacha_Game_2.OtherWindows {
             UpdatePlayerInfoBox();
 
 
-            // Finding all cards that the user owns
-            foreach (Card c in AllCards) {
-                if (OwnedCards.ContainsKey(Formatter.FormatOwnedCards(c))) {
-                    CreateLstBoxData(c, CardLSTBOX.Items.Count);
+            // Finding all cards that the user owns - Orders too
+            for (int ED = AllCards.Length - 1; ED >= 0; ED--) {
+                foreach (Card c in AllCards[ED]) {
+                    if (OwnedCards.ContainsKey(Formatter.FormatOwnedCards(c))) {
+                        CreateLstBoxData(c, CardLSTBOX.Items.Count);
+                    }
                 }
             }
         }
@@ -65,9 +62,8 @@ namespace Gacha_Game_2.OtherWindows {
             int width = (int)CardLSTBOX.Width;
 
             // Creating the inventory item
-            Grid g = new Grid{
-                Width = 480,
-                Height = 145,
+            UniformGrid g = new UniformGrid {
+                Columns = 3,
             };
 
             Border border = new Border {
@@ -81,7 +77,7 @@ namespace Gacha_Game_2.OtherWindows {
                 CornerRadius = new CornerRadius(10),
                 Height = 198,
                 Width = 145,
-                Margin = new Thickness()
+                //Margin = new Thickness()
             };
             TextBlock t = new TextBlock {
                 Text = Formatter.FormatInvenInfoTextBlock(c, OwnedCards),
@@ -89,7 +85,7 @@ namespace Gacha_Game_2.OtherWindows {
                 Foreground = new SolidColorBrush(Color.FromArgb(187, 255, 255, 255)),
                 Width = 100,
                 //HorizontalAlignment = HorizontalAlignment.Center,
-                Margin = new Thickness(161, 0, -161, 0)
+                //Margin = new Thickness(161, 0, -161, 0)
             };
             Button b = new Button {
                 Content = string.Format("Sell for {0}", (c.Rarity * 200) + (c.Level * 20)),
@@ -97,22 +93,24 @@ namespace Gacha_Game_2.OtherWindows {
                     Formatter.FormatOwnedCards(c),
                     JsonConvert.SerializeObject(c) },
                 //HorizontalAlignment = HorizontalAlignment.Right,
-                Margin = new Thickness(322, 0, -316, 0)
+                //Margin = new Thickness(322, 0, -316, 0)
             };
             b.Click += new RoutedEventHandler(SellBTN_Click);
 
             // Adding the inventory item to the lsit
-            UniformGrid u = new UniformGrid();
-            u.Children.Add(border);
-            u.Children.Add(t);
-            u.Children.Add(b);
-            CardLSTBOX.Items.Insert(insertPos, u);
+            g.Children.Add(border);
+            g.Children.Add(t);
+            g.Children.Add(b);
+            CardLSTBOX.Items.Insert(insertPos, g);
         }
 
+        /// <summary>
+        /// Updates the player info box
+        /// </summary>
         private void UpdatePlayerInfoBox() {
             int cardTotal = 0;
             foreach (string v in OwnedCards.Keys) cardTotal += OwnedCards[v];
-            InfoTXTBLOCK.Text = string.Format("Player: {0}\nBalance: {1}g\nCards: {2}", Player.Username, Player.Money, cardTotal.ToString());
+            InfoTXTBLOCK.Text = string.Format("Player: {0}\nBalance: {1}g\nTotal Cards: {2}", Player.Username, Player.Money, cardTotal.ToString());
         }
 
         /// <summary>

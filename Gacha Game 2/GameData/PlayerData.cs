@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gacha_Game_2.GameData;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,5 +26,6 @@ namespace Gacha_Game_2.Classes {
         public DateTime LastDailyTime { get; set; }
         public int ExtraGrab { get; set; }
         public int ExtraRoll { get; set; }
+
     }
 }

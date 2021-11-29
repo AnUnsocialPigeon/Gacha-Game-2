@@ -1,24 +1,14 @@
-﻿using System;
+﻿using Gacha_Game_2.Classes;
+using Gacha_Game_2.GameData;
+using Gacha_Game_2.OtherWindows;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Gacha_Game_2.Classes;
 using static Gacha_Game_2.GameData.Globals;
-using Gacha_Game_2.OtherWindows;
-using Gacha_Game_2.GameData;
-using Newtonsoft.Json;
-using System.Timers;
 
 namespace Gacha_Game_2 {
     /// <summary>
@@ -29,7 +19,7 @@ namespace Gacha_Game_2 {
 
         // Player Data
         public static PlayerData Player = new PlayerData();
-        public static List<Card> AllCards = new List<Card>();
+        public static List<Card>[] AllCards = new List<Card>[] { new List<Card>(), new List<Card>(), new List<Card>(), new List<Card>() };
         public static Dictionary<string, int> OwnedCards = new Dictionary<string, int>();
         public static Card[] RolledCards = null;
         public static List<string> CardDir = new List<string>();
@@ -48,9 +38,10 @@ namespace Gacha_Game_2 {
             if (!File.Exists(RolledCardsFile)) FileHandler.SaveRolledCards(RolledCards);
             if (!File.Exists(PlayerDataFile)) {
                 LoginWindow l = new LoginWindow();
-                l.ShowDialog();
-                if (!l.SubmitName)
+                _ = l.ShowDialog();
+                if (!l.SubmitName) {
                     Environment.Exit(0);
+                }
                 Player = new PlayerData(l.Username.Text, 2500);
                 FileHandler.SavePlayerData(Player);
             }
@@ -60,13 +51,17 @@ namespace Gacha_Game_2 {
             OwnedCards = FileHandler.LoadOwnedCards();
             RolledCards = FileHandler.LoadRolledCards();
 
+            // First card load attempt
             LoadCardsFromLocalDB();
 
             // If there are no cards in the files
-            if (AllCards.Count == 0) {
+            if (AllCards[0].Count == 0 || AllCards[1].Count == 0 || AllCards[2].Count == 0) {
                 NoCardsFoundErrorWindow n = new NoCardsFoundErrorWindow();
-                n.ShowDialog();
-                if (!n.ClosedCorrectly) Environment.Exit(0);
+                _ = n.ShowDialog();
+                if (!n.ClosedCorrectly) {
+                    Environment.Exit(0);
+                }
+                // If the card loading attempt failed, will retry
                 LoadCardsFromLocalDB();
             }
 
@@ -88,7 +83,8 @@ namespace Gacha_Game_2 {
             foreach (var cardDir in Directory.GetFiles(CardsDir)) {
                 try {
                     CardDir.Add(cardDir);
-                    AllCards.Add(JsonConvert.DeserializeObject<Card>(File.ReadAllText(cardDir)));
+                    Card c = JsonConvert.DeserializeObject<Card>(File.ReadAllText(cardDir));
+                    AllCards[c.Edition - 1].Add(c);
                 }
                 catch {
                     File.AppendAllText(LogFile, File.ReadAllText(cardDir) + " @" + DateTime.Now);
@@ -105,7 +101,7 @@ namespace Gacha_Game_2 {
         private void RollForCards_Click(object sender, RoutedEventArgs e) {
             CardRollWindow c = new CardRollWindow(CardDir, Player, AllCards, OwnedCards, RolledCards);
             Hide();
-            c.ShowDialog();
+            _ = c.ShowDialog();
             Show();
             AllCards = c.AllCards;
             RolledCards = c.RolledCards;
@@ -121,7 +117,7 @@ namespace Gacha_Game_2 {
         private void Inventory_Click(object sender, RoutedEventArgs e) {
             InventoryWindow i = new InventoryWindow(OwnedCards, AllCards, Player);
             Hide();
-            i.ShowDialog();
+            _ = i.ShowDialog();
             Show();
             Player = i.Player;
             OwnedCards = i.OwnedCards;
@@ -145,11 +141,10 @@ namespace Gacha_Game_2 {
         private void Shop_Click(object sender, RoutedEventArgs e) {
             ShopWindow s = new ShopWindow(Player);
             Hide();
-            s.ShowDialog();
+            _ = s.ShowDialog();
             Show();
             Player = s.Player;
         }
-        #endregion
 
         /// <summary>
         /// When the daily button is clicked
@@ -161,13 +156,26 @@ namespace Gacha_Game_2 {
             Player.LastDailyTime = DateTime.Now;
             (sender as Button).IsEnabled = false;
             Player.Money += 1000;
+            FileHandler.SavePlayerData(Player);
         }
 
+        private void SettingsBTN_Click(object sender, RoutedEventArgs e) {
+            SettingsWindow s = new SettingsWindow(Player, CardDir);
+            Hide();
+            _ = s.ShowDialog();
+            Show();
+            Player = s.Player;
+            CardDir = s.CardDir;
+        }
+        #endregion
+
+
         private void TimerUpdates(object sender, ElapsedEventArgs e) {
-            string daily = Player.LastDailyTime.AddHours(6).CompareTo(DateTime.Now) <= 0 ? "Now" :
+            string daily = Player.LastDailyTime.AddHours(6).CompareTo(DateTime.Now) <= 0 ? "+1000g" :
                 new DateTime(Math.Abs((DateTime.Now.AddHours(-6) - Player.LastDailyTime).Ticks)).ToString("HH:mm:ss");
-            Dispatcher.Invoke(() => { if (daily == "Now" && !DailyBTN.IsEnabled) DailyBTN.IsEnabled = true; }); 
+            Dispatcher.Invoke(() => { if (daily == "+1000g" && !DailyBTN.IsEnabled) { DailyBTN.IsEnabled = true; } });
             _ = Dispatcher.Invoke(() => DailyBTN.Content = string.Format("Daily ({0})", daily));
         }
+
     }
 }

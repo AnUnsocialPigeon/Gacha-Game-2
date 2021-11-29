@@ -13,6 +13,6 @@ namespace Gacha_Game_2.GameData {
         }
 
         public static string FormatInvenInfoTextBlock(Card c, Dictionary<string, int> OwnedCards) =>
-            c.Name + "\n" + c.Anime + "\nOwned Copies: " + OwnedCards[FormatOwnedCards(c)] + "\nEd: " + c.Edition;
+            c.Name + "\n" + c.Anime + "\nEd: " + c.Edition + "\nOwned Copies: " + OwnedCards[FormatOwnedCards(c)];
     }
 }

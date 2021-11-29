@@ -1,23 +1,11 @@
 ﻿using Gacha_Game_2.Classes;
 using Gacha_Game_2.GameData;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using Color = System.Windows.Media.Color;
 
 namespace Gacha_Game_2.OtherWindows {
     /// <summary>
@@ -29,10 +17,14 @@ namespace Gacha_Game_2.OtherWindows {
         public Card[] RolledCards;
         private List<string> CardUri;
         public Dictionary<string, int> OwnedCards = new Dictionary<string, int>();
-        public List<Card> AllCards;
+        public List<Card>[] AllCards;
         public PlayerData Player;
         private Random rnd = new Random();
-        public CardRollWindow(List<string> cardUris, PlayerData playerData, List<Card> allCards, Dictionary<string, int> ownedCards, Card[] rolledCards) {
+
+        // Threader Vars
+        private List<Card>[] Editions = new List<Card>[4];
+
+        public CardRollWindow(List<string> cardUris, PlayerData playerData, List<Card>[] allCards, Dictionary<string, int> ownedCards, Card[] rolledCards) {
             InitializeComponent();
 
             // Setup
@@ -42,6 +34,7 @@ namespace Gacha_Game_2.OtherWindows {
             OwnedCards = ownedCards;
             RolledCards = rolledCards;
 
+            // Button Setup
             Grab1BTN.IsEnabled = false;
             Grab2BTN.IsEnabled = false;
             Grab3BTN.IsEnabled = false;
@@ -49,34 +42,38 @@ namespace Gacha_Game_2.OtherWindows {
             Grab2BTN.Opacity = 0.5d;
             Grab3BTN.Opacity = 0.5d;
 
-            if (RolledCards != null) DisplayCards();
+            // If they have previously rolled any cards (ever)
+            if (RolledCards != null) {
+                DisplayCards();
+            }
 
             // Timer to update the DropBox
-            Timer UpdateDrop = new Timer();
+            System.Timers.Timer UpdateDrop = new System.Timers.Timer();
             UpdateDrop.Elapsed += new ElapsedEventHandler(AsyncBoxUpdates);
             UpdateDrop.Interval = 100;
             UpdateDrop.Start();
         }
 
         #region Roll
+
         /// <summary>
         /// Handler for the update drop box
+        /// ########### Timer Shit ###########
         /// </summary>
         /// <param name="sourse"></param>
         /// <param name="e"></param>
         private void AsyncBoxUpdates(object sourse, ElapsedEventArgs e) {
             try {
+                // Time maths 
                 string freeDrop = Player.LastRollTime.AddMinutes(20).CompareTo(DateTime.Now) <= 0 ? "Now" :
                 new DateTime(Math.Abs((DateTime.Now.AddMinutes(-20) - Player.LastRollTime).Ticks)).ToString("mm:ss");
                 string grab = Player.LastGrabTime.AddMinutes(5).CompareTo(DateTime.Now) <= 0 ? "Now" :
                 new DateTime(Math.Abs((DateTime.Now.AddMinutes(-5) - Player.LastGrabTime).Ticks)).ToString("mm:ss");
 
-                // Updating
-                _ = Dispatcher.Invoke(() => BalTXTBLOC.Text = string.Format("\n  Bal: {0}g\n  Free Drop: {1}\n  Grab: {2}\n  Extra Grabs: {3}\n  Extra Rolls: {4}",
-                    Player.Money, freeDrop, grab, Player.ExtraGrab, Player.ExtraRoll));
+                // Updating the GUI 
                 Dispatcher.Invoke(() => {
-                    if (RollBTN.Content.ToString() == "Roll" && freeDrop == "Now")
-                        _ = Dispatcher.Invoke(() => RollBTN.Content = "Roll (Free)");
+                    BalTXTBLOC.Text = string.Format("\n  Bal: {0}g\n  Free Drop: {1}\n  Grab: {2}\n  Extra Rolls: {3}\n  Extra Grabs: {4}", Player.Money, freeDrop, grab, Player.ExtraRoll, Player.ExtraGrab);
+                    if (RollBTN.Content.ToString() == "Roll" && freeDrop == "Now") RollBTN.Content = "Roll (Free)";
                 });
             }
             catch { }
@@ -96,13 +93,27 @@ namespace Gacha_Game_2.OtherWindows {
             else if (Player.ExtraRoll <= 0) {
                 return;
             }
-            else Player.ExtraRoll--;
+            else {
+                Player.ExtraRoll--;
+            }
 
-            // Updating the cards
+            // Updating the cards + Doint the maths
+            float[] rndED = new float[] {
+                (float)rnd.NextDouble(),
+                (float)rnd.NextDouble(),
+                (float)rnd.NextDouble(),
+            };
+            int[] ActualEd = new int[] {
+                rndED[0] < 0.75f ? 0 : rndED[0] < 0.90f ? 1 : rndED[0] < 0.98f ? 2 : 3,
+                rndED[1] < 0.75f ? 0 : rndED[1] < 0.90f ? 1 : rndED[1] < 0.98f ? 2 : 3,
+                rndED[2] < 0.75f ? 0 : rndED[2] < 0.90f ? 1 : rndED[2] < 0.98f ? 2 : 3,
+            };
+
+            // Adding the cards to Rolled Cards
             RolledCards = new Card[3] {
-                AllCards[rnd.Next(0, CardUri.Count)],
-                AllCards[rnd.Next(0, CardUri.Count)],
-                AllCards[rnd.Next(0, CardUri.Count)]
+                AllCards[ActualEd[0]][rnd.Next(0, AllCards[ActualEd[0]].Count)],
+                AllCards[ActualEd[1]][rnd.Next(0, AllCards[ActualEd[1]].Count)],
+                AllCards[ActualEd[2]][rnd.Next(0, AllCards[ActualEd[2]].Count)]
             };
 
             DisplayCards();
@@ -111,6 +122,9 @@ namespace Gacha_Game_2.OtherWindows {
             FileHandler.SaveRolledCards(RolledCards);
         }
 
+        /// <summary>
+        /// Updates the displayed cards (that were rolled)
+        /// </summary>
         private void DisplayCards() {
             Img1.Source = new BitmapImage(new Uri(RolledCards[0].ImgURL));
             Img2.Source = new BitmapImage(new Uri(RolledCards[1].ImgURL));
@@ -118,9 +132,9 @@ namespace Gacha_Game_2.OtherWindows {
             Img1Border.BorderBrush = Globals.EDBorderColors[RolledCards[0].Edition - 1];
             Img2Border.BorderBrush = Globals.EDBorderColors[RolledCards[1].Edition - 1];
             Img3Border.BorderBrush = Globals.EDBorderColors[RolledCards[2].Edition - 1];
-            GrabCardInfoTXTBLOCK1.Text = RolledCards[0].Name + "\nED: " + RolledCards[0].Edition;
-            GrabCardInfoTXTBLOCK2.Text = RolledCards[1].Name + "\nED: " + RolledCards[1].Edition;
-            GrabCardInfoTXTBLOCK3.Text = RolledCards[2].Name + "\nED: " + RolledCards[2].Edition;
+            CardInfo1TXTBLOCK.Text = RolledCards[0].Name + "\n" + RolledCards[0].Anime + "\nED: " + RolledCards[0].Edition;
+            CardInfo2TXTBLOCK.Text = RolledCards[1].Name + "\n" + RolledCards[1].Anime + "\nED: " + RolledCards[1].Edition;
+            CardInfo3TXTBLOCK.Text = RolledCards[2].Name + "\n" + RolledCards[2].Anime + "\nED: " + RolledCards[2].Edition;
 
             Grab1BTN.IsEnabled = true;
             Grab2BTN.IsEnabled = true;

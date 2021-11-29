@@ -125,7 +125,7 @@ namespace Gacha_Game_2 {
         }
 
         /// <summary>
-        /// For the battle system
+        /// For the battle system ({TODO})
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -159,6 +159,11 @@ namespace Gacha_Game_2 {
             FileHandler.SavePlayerData(Player);
         }
 
+        /// <summary>
+        /// Loads the settings window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SettingsBTN_Click(object sender, RoutedEventArgs e) {
             SettingsWindow s = new SettingsWindow(Player, CardDir);
             Hide();
@@ -169,7 +174,11 @@ namespace Gacha_Game_2 {
         }
         #endregion
 
-
+        /// <summary>
+        /// For all the timer updates for the daily 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TimerUpdates(object sender, ElapsedEventArgs e) {
             string daily = Player.LastDailyTime.AddHours(6).CompareTo(DateTime.Now) <= 0 ? "+1000g" :
                 new DateTime(Math.Abs((DateTime.Now.AddHours(-6) - Player.LastDailyTime).Ticks)).ToString("HH:mm:ss");

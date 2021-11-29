@@ -63,7 +63,8 @@ namespace Gacha_Game_2.OtherWindows {
 
             // Creating the inventory item
             UniformGrid g = new UniformGrid {
-                Columns = 3,
+                Columns = 4,
+                Margin = new Thickness(1, 1, 1, 1)
             };
 
             Border border = new Border {
@@ -77,30 +78,34 @@ namespace Gacha_Game_2.OtherWindows {
                 CornerRadius = new CornerRadius(10),
                 Height = 198,
                 Width = 145,
-                //Margin = new Thickness()
             };
-            TextBlock t = new TextBlock {
+            TextBlock cardInfoBox = new TextBlock {
                 Text = Formatter.FormatInvenInfoTextBlock(c, OwnedCards),
                 Background = new SolidColorBrush(Color.FromArgb(187, 16, 16, 16)),
                 Foreground = new SolidColorBrush(Color.FromArgb(187, 255, 255, 255)),
-                Width = 100,
-                //HorizontalAlignment = HorizontalAlignment.Center,
-                //Margin = new Thickness(161, 0, -161, 0)
+                Margin = new Thickness(10, 0, 10, 0),
+                Width = 157,
             };
-            Button b = new Button {
+            Button combineUp = new Button {
+                Content = c.Edition == 4 ? "Max Edition" : string.Format("Trade Up {0} for ED{1}", (15 - (3 * (c.Edition - 1))).ToString(), c.Edition + 1),
+                Tag = c,
+                Margin = new Thickness(10, 0, 10, 0),
+            };
+            combineUp.Click += new RoutedEventHandler(TradeUpBTN_Click);
+            Button sellBTN = new Button {
                 Content = string.Format("Sell for {0}", (c.Rarity * 200) + (c.Level * 20)),
                 Tag = new string[] { ((c.Rarity * 200) + (c.Level * 40)).ToString(),
                     Formatter.FormatOwnedCards(c),
                     JsonConvert.SerializeObject(c) },
-                //HorizontalAlignment = HorizontalAlignment.Right,
-                //Margin = new Thickness(322, 0, -316, 0)
+                Margin = new Thickness(10, 0, 10, 0),
             };
-            b.Click += new RoutedEventHandler(SellBTN_Click);
+            sellBTN.Click += new RoutedEventHandler(SellBTN_Click);
 
             // Adding the inventory item to the lsit
             g.Children.Add(border);
-            g.Children.Add(t);
-            g.Children.Add(b);
+            g.Children.Add(cardInfoBox);
+            g.Children.Add(combineUp);
+            g.Children.Add(sellBTN);
             CardLSTBOX.Items.Insert(insertPos, g);
         }
 
@@ -141,6 +146,16 @@ namespace Gacha_Game_2.OtherWindows {
 
             UpdatePlayerInfoBox();
             FileHandler.SaveOwnedCards(OwnedCards);
+        }
+
+        /// <summary>
+        /// Trade up sheninagans
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void TradeUpBTN_Click(object sender, RoutedEventArgs e) {
+            if (((sender as Button).Tag as Card).Edition >= 4) return;
+
         }
     }
 }

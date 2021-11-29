@@ -20,6 +20,10 @@ namespace Gacha_Game_2.GameData {
         public static string RolledCardsFile => GameDataDir + "DropData.dat";
         public static string BackgroundImgFile => AssetsDir + "background_1.jpg";
 
+        // Roll chances
+        public const float ED1RollChance = 0.9f;
+        public const float ED2RollChance = 0.98f;
+        public const float ED3RollChance = 0.999f;
 
         // BorderBrush Colors for the cards depending on their ED
         public static SolidColorBrush[] EDBorderColors = new SolidColorBrush[]{

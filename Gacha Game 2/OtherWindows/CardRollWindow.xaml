@@ -42,8 +42,8 @@
         <ImageBrush ImageSource="{Binding ElementName=CardDrop, Path=BgUri}" Stretch="UniformToFill"/>
     </Window.Background>
     <Grid>
-        <Button Name="RollBTN" Content="Roll" HorizontalAlignment="Center" Margin="516,10,9.6,278.2" VerticalAlignment="Center" Width="268" Height="51" FontSize="24" Click="RollBTN_Click"/>
-        <TextBlock Name="BalTXTBLOC" FontSize="14" HorizontalAlignment="Center" Margin="515,66,9.6,158.2" TextWrapping="Wrap" VerticalAlignment="Center" Height="115" Width="269" LineHeight="10" Text="Hello" FontWeight="Bold"/>
+        <Button Name="RollBTN" Content="Roll (Unavaliable)" HorizontalAlignment="Center" Margin="516,10,9.6,278.2" VerticalAlignment="Center" Width="268" Height="51" FontSize="24" Click="RollBTN_Click"/>
+        <TextBlock Name="BalTXTBLOC" FontSize="14" HorizontalAlignment="Center" Margin="515,66,10,145" TextWrapping="Wrap" VerticalAlignment="Center" Height="129" Width="269" LineHeight="10" Text="Hello" FontWeight="Bold"/>
         <Border Name="Img1Border" CornerRadius="10" BorderThickness="5" BorderBrush="#FFFFFFFF" Margin="10,10,623.6,114.2">
             <Image Name="Img1" HorizontalAlignment="Left" Height="198" Margin="0.2,0.2,0,0" VerticalAlignment="Top" Width="145" Stretch="UniformToFill"/>
         </Border>
@@ -56,7 +56,7 @@
         <Button x:Name="Grab1BTN" Tag="0" Content="Grab" HorizontalAlignment="Left" Margin="10,285,0,0" VerticalAlignment="Top" Width="160" Height="44" FontSize="24" Click="GrabBTN_Click"/>
         <Button x:Name="Grab2BTN" Tag="1" Content="Grab" HorizontalAlignment="Left" Margin="175,285,0,0" VerticalAlignment="Top" Width="160" Height="44" FontSize="24" Click="GrabBTN_Click"/>
         <Button x:Name="Grab3BTN" Tag="2" Content="Grab" HorizontalAlignment="Left" Margin="340,285,0,0" VerticalAlignment="Top" Width="160" Height="44" FontSize="24" Click="GrabBTN_Click"/>
-        <ListBox Name="LogLSTBOX" Background="#BB202020" Foreground="White" HorizontalAlignment="Center" Height="143" Margin="516,186,9.6,10.2" VerticalAlignment="Center" Width="268"/>
+        <ListBox Name="LogLSTBOX" Background="#BB202020" Foreground="White" HorizontalAlignment="Center" Height="129" Margin="516,200,10,11" VerticalAlignment="Center" Width="268"/>
         <TextBlock Name="CardInfo1TXTBLOCK" HorizontalAlignment="Left" Margin="10,230,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="50" Width="160" TextAlignment="Center"/>
         <TextBlock Name="CardInfo2TXTBLOCK" HorizontalAlignment="Left" Margin="175,230,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="50" Width="160" TextAlignment="Center"/>
         <TextBlock Name="CardInfo3TXTBLOCK" HorizontalAlignment="Left" Margin="340,230,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="50" Width="160" TextAlignment="Center"/>

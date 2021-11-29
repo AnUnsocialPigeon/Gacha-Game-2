@@ -48,8 +48,8 @@ namespace Gacha_Game_2.OtherWindows {
             }
 
             // Timer to update the DropBox
-            System.Timers.Timer UpdateDrop = new System.Timers.Timer();
-            UpdateDrop.Elapsed += new ElapsedEventHandler(AsyncBoxUpdates);
+            Timer UpdateDrop = new Timer();
+            UpdateDrop.Elapsed += new ElapsedEventHandler(TimerBoxUpdates);
             UpdateDrop.Interval = 100;
             UpdateDrop.Start();
         }
@@ -62,18 +62,21 @@ namespace Gacha_Game_2.OtherWindows {
         /// </summary>
         /// <param name="sourse"></param>
         /// <param name="e"></param>
-        private void AsyncBoxUpdates(object sourse, ElapsedEventArgs e) {
+        private void TimerBoxUpdates(object sourse, ElapsedEventArgs e) {
             try {
                 // Time maths 
                 string freeDrop = Player.LastRollTime.AddMinutes(20).CompareTo(DateTime.Now) <= 0 ? "Now" :
-                new DateTime(Math.Abs((DateTime.Now.AddMinutes(-20) - Player.LastRollTime).Ticks)).ToString("mm:ss");
+                    new DateTime(Math.Abs((DateTime.Now.AddMinutes(-20) - Player.LastRollTime).Ticks)).ToString("mm:ss");
                 string grab = Player.LastGrabTime.AddMinutes(5).CompareTo(DateTime.Now) <= 0 ? "Now" :
-                new DateTime(Math.Abs((DateTime.Now.AddMinutes(-5) - Player.LastGrabTime).Ticks)).ToString("mm:ss");
+                    new DateTime(Math.Abs((DateTime.Now.AddMinutes(-5) - Player.LastGrabTime).Ticks)).ToString("mm:ss");
+                //string grabPeriod = Player.LastRollTime.AddMinutes(1).CompareTo(DateTime.Now) > 0 ? "Ended" :
+                //    new DateTime(Math.Abs((DateTime.Now.AddMinutes(-20) - Player.LastRollTime.AddMinutes(19)).Ticks)).ToString("mm:ss");
 
                 // Updating the GUI 
                 Dispatcher.Invoke(() => {
-                    BalTXTBLOC.Text = string.Format("\n  Bal: {0}g\n  Free Drop: {1}\n  Grab: {2}\n  Extra Rolls: {3}\n  Extra Grabs: {4}", Player.Money, freeDrop, grab, Player.ExtraRoll, Player.ExtraGrab);
-                    if (RollBTN.Content.ToString() == "Roll" && freeDrop == "Now") RollBTN.Content = "Roll (Free)";
+                    BalTXTBLOC.Text = string.Format("\n  Bal: {0}g\n  Free Drop: {1}\n  Grab: {2}\n  Extra Rolls: {3}\n  Extra Grabs: {4}\n  Grab Period: lol", Player.Money, freeDrop, grab, Player.ExtraRoll, Player.ExtraGrab);
+                    if (RollBTN.Content.ToString() == "Roll (Unavaliable)" && freeDrop == "Now") RollBTN.Content = "Roll (Free)";
+                    else if (RollBTN.Content.ToString() == "Roll (Unavaliable)" && freeDrop != "Now" && Player.ExtraRoll > 0) RollBTN.Content = "Roll (Extra Roll)";
                 });
             }
             catch { }
@@ -87,7 +90,7 @@ namespace Gacha_Game_2.OtherWindows {
         private void RollBTN_Click(object sender, RoutedEventArgs e) {
             // Taking the roll from them  
             if (Player.LastRollTime.AddMinutes(30).CompareTo(DateTime.Now) <= 0) {
-                LogLSTBOX.Items.Insert(0, "Free drop used!");
+                LogLSTBOX.Items.Insert(0, "Free Roll used!");
                 Player.LastRollTime = DateTime.Now;
             }
             else if (Player.ExtraRoll <= 0) {
@@ -95,6 +98,7 @@ namespace Gacha_Game_2.OtherWindows {
             }
             else {
                 Player.ExtraRoll--;
+                LogLSTBOX.Items.Insert(0, "Extra Roll used!");
             }
 
             // Updating the cards + Doint the maths
@@ -104,9 +108,9 @@ namespace Gacha_Game_2.OtherWindows {
                 (float)rnd.NextDouble(),
             };
             int[] ActualEd = new int[] {
-                rndED[0] < 0.75f ? 0 : rndED[0] < 0.90f ? 1 : rndED[0] < 0.98f ? 2 : 3,
-                rndED[1] < 0.75f ? 0 : rndED[1] < 0.90f ? 1 : rndED[1] < 0.98f ? 2 : 3,
-                rndED[2] < 0.75f ? 0 : rndED[2] < 0.90f ? 1 : rndED[2] < 0.98f ? 2 : 3,
+                rndED[0] < Globals.ED1RollChance ? 0 : rndED[0] < Globals.ED2RollChance ? 1 : rndED[0] < Globals.ED3RollChance ? 2 : 3,
+                rndED[1] < Globals.ED1RollChance ? 0 : rndED[1] < Globals.ED2RollChance ? 1 : rndED[1] < Globals.ED3RollChance ? 2 : 3,
+                rndED[2] < Globals.ED1RollChance ? 0 : rndED[2] < Globals.ED2RollChance ? 1 : rndED[2] < Globals.ED3RollChance ? 2 : 3,
             };
 
             // Adding the cards to Rolled Cards
@@ -117,7 +121,7 @@ namespace Gacha_Game_2.OtherWindows {
             };
 
             DisplayCards();
-            RollBTN.Content = "Roll";
+            RollBTN.Content = Player.ExtraRoll == 0 ? "Roll (Unavaliable)" : RollBTN.Content;
             FileHandler.SavePlayerData(Player);
             FileHandler.SaveRolledCards(RolledCards);
         }
@@ -157,6 +161,10 @@ namespace Gacha_Game_2.OtherWindows {
                 LogLSTBOX.Items.Insert(0, "No Grabs!");
                 return;
             }
+            //if (Player.LastRollTime.AddMinutes(1).CompareTo(DateTime.Now) <= 0) {
+            //    LogLSTBOX.Items.Insert(0, "Grab period has ended");
+            //    return;
+            //}
 
             // Adding to cards
             Card c = RolledCards[int.Parse((sender as Button).Tag.ToString())];

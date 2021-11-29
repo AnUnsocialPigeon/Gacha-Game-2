@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         x:Name="InvenWindow"
-        Title="Inventory" Height="649.425" Width="500">
+        Title="Inventory" Height="649.425" Width="806">
     <Window.Background>
         <ImageBrush ImageSource="{Binding ElementName=InvenWindow, Path=BgUri}" Stretch="UniformToFill"/>
     </Window.Background>

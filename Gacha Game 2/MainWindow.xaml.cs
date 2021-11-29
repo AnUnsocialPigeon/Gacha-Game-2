@@ -165,9 +165,7 @@ namespace Gacha_Game_2 {
 
         private void TimerUpdates(object sender, ElapsedEventArgs e) {
             string daily = Player.LastDailyTime.AddHours(6).CompareTo(DateTime.Now) <= 0 ? "Now" :
-                    (5 - (int)(DateTime.Now - Player.LastDailyTime).TotalHours).ToString() + ":" +
-                    (59 - (int)(DateTime.Now - Player.LastDailyTime).TotalMinutes).ToString() + ":" +
-                    (59 - (int)(DateTime.Now - Player.LastDailyTime).TotalSeconds % 60).ToString();
+                new DateTime(Math.Abs((DateTime.Now.AddHours(-6) - Player.LastDailyTime).Ticks)).ToString("HH:mm:ss");
             Dispatcher.Invoke(() => { if (daily == "Now" && !DailyBTN.IsEnabled) DailyBTN.IsEnabled = true; }); 
             _ = Dispatcher.Invoke(() => DailyBTN.Content = string.Format("Daily ({0})", daily));
         }

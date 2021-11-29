@@ -57,6 +57,7 @@ namespace Gacha_Game_2.OtherWindows {
                 new Card("Albedo", "Overlord", 1),
                 new Card("Albedo", "Overlord", 2),
                 new Card("Albedo", "Overlord", 3),
+                new Card("Albedo", "Overlord", 4, "https://i.redd.it/andhp5039ad71.jpg"),
                 new Card("Momonga", "Overlord", 1, "http://d2l56h9h5tj8ue.cloudfront.net/images/cards/momonga-overlord-1.jpg"),
                 new Card("Momonga", "Overlord", 2, "http://d2l56h9h5tj8ue.cloudfront.net/images/cards/momonga-overlord-2.jpg"),
                 new Card("Momonga", "Overlord", 3, "http://d2l56h9h5tj8ue.cloudfront.net/images/cards/momonga-overlord-3.jpg"),
@@ -76,7 +77,7 @@ namespace Gacha_Game_2.OtherWindows {
                 new Card("Shiro", "No Game No Life", 4, "http://d2l56h9h5tj8ue.cloudfront.net/images/cards/versioned/shiro-no-game-no-life-3-1.jpg"),
                 new Card("Sora", "No Game No Life", 1, "http://d2l56h9h5tj8ue.cloudfront.net/images/cards/sora-no-game-no-life-1.jpg"),
                 new Card("Sora", "No Game No Life", 2, "http://d2l56h9h5tj8ue.cloudfront.net/images/cards/sora-no-game-no-life-2.jpg"),
-                new Card("Sora", "No Game No Life", 2, "http://d2l56h9h5tj8ue.cloudfront.net/images/cards/sora-no-game-no-life-3.jpg"),
+                new Card("Sora", "No Game No Life", 3, "http://d2l56h9h5tj8ue.cloudfront.net/images/cards/sora-no-game-no-life-3.jpg"),
                 new Card("Sora", "No Game No Life", 4, "http://d2l56h9h5tj8ue.cloudfront.net/images/cards/versioned/sora-no-game-no-life-3-1.jpg"),
                 new Card("Clair Aoki", "Gleipnir", 1),
                 new Card("Clair Aoki", "Gleipnir", 2),
@@ -96,23 +97,6 @@ namespace Gacha_Game_2.OtherWindows {
                 new Card("Calcifer", "Howl's Moving Castle", 1),
                 new Card("Calcifer", "Howl's Moving Castle", 2),
                 new Card("Calcifer", "Howl's Moving Castle", 3),
-                new Card("Homura Akemi", "Puella Magi Madoka Magica", 1),
-                new Card("Homura Akemi", "Puella Magi Madoka Magica", 2),
-                new Card("Homura Akemi", "Puella Magi Madoka Magica", 3),
-                new Card("Madoka Kaname", "Puella Magi Madoka Magica", 1),
-                new Card("Madoka Kaname", "Puella Magi Madoka Magica", 2),
-                new Card("Madoka Kaname", "Puella Magi Madoka Magica", 3),
-                new Card("Mami Tomoe", "Puella Magi Madoka Magica", 1),
-                new Card("Mami Tomoe", "Puella Magi Madoka Magica", 2),
-                new Card("Mami Tomoe", "Puella Magi Madoka Magica", 3),
-                new Card("Shinji Ikari", "Neon Genesis Evangelion", 1),
-                new Card("Shinji Ikari", "Neon Genesis Evangelion", 2),
-                new Card("Shinji Ikari", "Neon Genesis Evangelion", 3),
-            };
-
-
-            byte[] BackgroundFile = new byte[] {
-
             };
 
             foreach (Card c in ManualCardAddition) FileHandler.SaveCardData(c);

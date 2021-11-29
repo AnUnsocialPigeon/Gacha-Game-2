@@ -38,8 +38,8 @@
             <Setter Property="Foreground" Value="White"/>
         </Style>
     </Window.Resources>
-    <Grid>
-        <ListBox Name="CardLSTBOX" HorizontalAlignment="Center" Background="#BB101010" Width="490" Margin="0, 105, 0, 0"/>
+    <Grid Name="MainGrid">
+        <ListBox Name="CardLSTBOX" Background="#BB101010" Margin="1,105,1,0"/>
         <TextBlock Name="InfoTXTBLOCK" Margin="10,10,10,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="90"/>
     </Grid>
 </Window>

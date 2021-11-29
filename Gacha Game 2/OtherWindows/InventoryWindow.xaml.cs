@@ -27,6 +27,8 @@ namespace Gacha_Game_2.OtherWindows {
         public List<Card> AllCards = new List<Card>();
         public PlayerData Player = new PlayerData();
 
+        private Border CardImageTemplate = new Border();
+
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -34,10 +36,16 @@ namespace Gacha_Game_2.OtherWindows {
         /// <param name="allCards"></param>
         public InventoryWindow(Dictionary<string, int> ownedCards, List<Card> allCards, PlayerData player) {
             InitializeComponent();
+
+            // Loading the image border template
+            //CardImageTemplate = ImgBorder;
+            //MainGrid.Children.Remove(ImgBorder);
+            //(CardImageTemplate.Parent as Grid).Children.Remove(CardImageTemplate);
+
             AllCards = allCards;
             OwnedCards = ownedCards;
             Player = player;
-            UpdatePlayerInfoBox();  
+            UpdatePlayerInfoBox();
 
 
             // Finding all cards that the user owns
@@ -57,18 +65,23 @@ namespace Gacha_Game_2.OtherWindows {
             int width = (int)CardLSTBOX.Width;
 
             // Creating the inventory item
-            UniformGrid g = new UniformGrid {
-                Width = width - 20,
-                Height = 100,
-                Columns = 3
+            Grid g = new Grid{
+                Width = 480,
+                Height = 145,
             };
-            Image i = new Image {
-                Source = new BitmapImage(new Uri(c.ImgURL)),
-                Width = 80,
-                Height = 100,
-                Stretch = Stretch.UniformToFill,
-                //HorizontalAlignment = HorizontalAlignment.Left,
-                //Margin = new Thickness(0, 0, width - 80, 0)
+
+            Border border = new Border {
+                Child = new Image {
+                    Height = 198,
+                    Width = 145,
+                    Source = new BitmapImage(new Uri(c.ImgURL))
+                },
+                BorderThickness = new Thickness(5, 5, 5, 5),
+                BorderBrush = Globals.EDBorderColors[c.Edition - 1],
+                CornerRadius = new CornerRadius(10),
+                Height = 198,
+                Width = 145,
+                Margin = new Thickness()
             };
             TextBlock t = new TextBlock {
                 Text = Formatter.FormatInvenInfoTextBlock(c, OwnedCards),
@@ -76,7 +89,7 @@ namespace Gacha_Game_2.OtherWindows {
                 Foreground = new SolidColorBrush(Color.FromArgb(187, 255, 255, 255)),
                 Width = 100,
                 //HorizontalAlignment = HorizontalAlignment.Center,
-                //Margin = new Thickness(85, 0, 105, 0)
+                Margin = new Thickness(161, 0, -161, 0)
             };
             Button b = new Button {
                 Content = string.Format("Sell for {0}", (c.Rarity * 200) + (c.Level * 20)),
@@ -84,13 +97,13 @@ namespace Gacha_Game_2.OtherWindows {
                     Formatter.FormatOwnedCards(c),
                     JsonConvert.SerializeObject(c) },
                 //HorizontalAlignment = HorizontalAlignment.Right,
-                //Margin = new Thickness(width - 100, 0, 0, 0)
+                Margin = new Thickness(322, 0, -316, 0)
             };
             b.Click += new RoutedEventHandler(SellBTN_Click);
 
             // Adding the inventory item to the lsit
             UniformGrid u = new UniformGrid();
-            u.Children.Add(i);
+            u.Children.Add(border);
             u.Children.Add(t);
             u.Children.Add(b);
             CardLSTBOX.Items.Insert(insertPos, u);
@@ -124,7 +137,7 @@ namespace Gacha_Game_2.OtherWindows {
             }
             else {
                 // Updates the textblock's text
-                (((sender as Button).Parent as UniformGrid).Children[1] as TextBlock).Text = 
+                (((sender as Button).Parent as UniformGrid).Children[1] as TextBlock).Text =
                     Formatter.FormatInvenInfoTextBlock(senderTagCard, OwnedCards);
             }
 

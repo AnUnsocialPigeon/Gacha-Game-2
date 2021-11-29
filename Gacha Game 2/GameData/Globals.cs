@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace Gacha_Game_2.GameData {
     public class Globals {
@@ -18,5 +19,14 @@ namespace Gacha_Game_2.GameData {
         public static string ServerDetailsFile => GameDataDir + "ServerInfo.txt";
         public static string RolledCardsFile => GameDataDir + "DropData.dat";
         public static string BackgroundImgFile => @"D:\C#\Gacha Game 2\Gacha Game 2\Assets\background_1.jpg";
+
+
+        // BorderBrush Colors for the cards depending on their ED
+        public static SolidColorBrush[] EDBorderColors = new SolidColorBrush[]{
+            new SolidColorBrush(Color.FromArgb(255, 128, 128, 128)),
+            new SolidColorBrush(Color.FromArgb(255, 100, 164, 164)),
+            new SolidColorBrush(Color.FromArgb(255, 164, 164, 100)),
+            new SolidColorBrush(Color.FromArgb(255, 255, 50, 50)),
+        };
     }
 }

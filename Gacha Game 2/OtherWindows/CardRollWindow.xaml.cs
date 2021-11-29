@@ -26,14 +26,6 @@ namespace Gacha_Game_2.OtherWindows {
     public partial class CardRollWindow : Window {
         public string BgUri { get { return Globals.BackgroundImgFile; } }
 
-        // BorderBrush Colors for the cards depending on their ED
-        public SolidColorBrush[] ColorED = new SolidColorBrush[]{
-            new SolidColorBrush(Color.FromArgb(255, 128, 128, 128)),
-            new SolidColorBrush(Color.FromArgb(255, 100, 164, 164)),
-            new SolidColorBrush(Color.FromArgb(255, 164, 164, 100)),
-            new SolidColorBrush(Color.FromArgb(255, 255, 50, 50)),
-        };
-
         public Card[] RolledCards;
         private List<string> CardUri;
         public Dictionary<string, int> OwnedCards = new Dictionary<string, int>();
@@ -75,11 +67,9 @@ namespace Gacha_Game_2.OtherWindows {
         private void AsyncBoxUpdates(object sourse, ElapsedEventArgs e) {
             try {
                 string freeDrop = Player.LastRollTime.AddMinutes(20).CompareTo(DateTime.Now) <= 0 ? "Now" :
-                    (29 - (int)(DateTime.Now - Player.LastRollTime).TotalMinutes).ToString() + ":" +
-                    (59 - (int)(DateTime.Now - Player.LastRollTime).TotalSeconds % 60).ToString();
+                new DateTime(Math.Abs((DateTime.Now.AddMinutes(-20) - Player.LastRollTime).Ticks)).ToString("mm:ss");
                 string grab = Player.LastGrabTime.AddMinutes(5).CompareTo(DateTime.Now) <= 0 ? "Now" :
-                    (29 - (int)(DateTime.Now - Player.LastGrabTime).TotalMinutes).ToString() + ":" +
-                    (59 - (int)(DateTime.Now - Player.LastGrabTime).TotalSeconds % 60).ToString();
+                new DateTime(Math.Abs((DateTime.Now.AddMinutes(-5) - Player.LastGrabTime).Ticks)).ToString("mm:ss");
 
                 // Updating
                 _ = Dispatcher.Invoke(() => BalTXTBLOC.Text = string.Format("\n  Bal: {0}g\n  Free Drop: {1}\n  Grab: {2}\n  Extra Grabs: {3}\n  Extra Rolls: {4}",
@@ -125,9 +115,9 @@ namespace Gacha_Game_2.OtherWindows {
             Img1.Source = new BitmapImage(new Uri(RolledCards[0].ImgURL));
             Img2.Source = new BitmapImage(new Uri(RolledCards[1].ImgURL));
             Img3.Source = new BitmapImage(new Uri(RolledCards[2].ImgURL));
-            Img1Border.BorderBrush = ColorED[RolledCards[0].Edition - 1];
-            Img2Border.BorderBrush = ColorED[RolledCards[1].Edition - 1];
-            Img3Border.BorderBrush = ColorED[RolledCards[2].Edition - 1];
+            Img1Border.BorderBrush = Globals.EDBorderColors[RolledCards[0].Edition - 1];
+            Img2Border.BorderBrush = Globals.EDBorderColors[RolledCards[1].Edition - 1];
+            Img3Border.BorderBrush = Globals.EDBorderColors[RolledCards[2].Edition - 1];
             GrabCardInfoTXTBLOCK1.Text = RolledCards[0].Name + "\nED: " + RolledCards[0].Edition;
             GrabCardInfoTXTBLOCK2.Text = RolledCards[1].Name + "\nED: " + RolledCards[1].Edition;
             GrabCardInfoTXTBLOCK3.Text = RolledCards[2].Name + "\nED: " + RolledCards[2].Edition;

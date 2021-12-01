@@ -61,8 +61,11 @@ namespace Gacha_Game_2 {
                 if (!n.ClosedCorrectly) {
                     Environment.Exit(0);
                 }
+
                 // If the card loading attempt failed, will retry
                 LoadCardsFromLocalDB();
+
+                // Will give a free Albedo for first time join!
             }
 
             InitializeComponent();

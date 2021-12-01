@@ -25,6 +25,12 @@ namespace Gacha_Game_2.GameData {
         public const float ED2RollChance = 0.98f;
         public const float ED3RollChance = 0.999f;
 
+        // Costs
+        public static int CardSellPrice(Card c) => 2000 - (300 * CardTradeUpCount(c.Edition - 2));
+        public static int CardTradeUpCount(int ed) => 5 - ed;
+
+
+
         // BorderBrush Colors for the cards depending on their ED
         public static SolidColorBrush[] EDBorderColors = new SolidColorBrush[]{
             new SolidColorBrush(Color.FromArgb(255, 128, 128, 128)),

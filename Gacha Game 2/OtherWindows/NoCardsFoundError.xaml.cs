@@ -24,7 +24,7 @@ namespace Gacha_Game_2.OtherWindows {
     public partial class NoCardsFoundErrorWindow : Window {
         public string BgUri { get { return Globals.BackgroundImgFile; } }
         public bool ClosedCorrectly = false;
-        List<Card> Cards = new List<Card>();
+        
         public NoCardsFoundErrorWindow() {
             InitializeComponent();
         }
@@ -77,7 +77,7 @@ namespace Gacha_Game_2.OtherWindows {
                 new Card("Sora", "No Game No Life", 1, "http://d2l56h9h5tj8ue.cloudfront.net/images/cards/sora-no-game-no-life-1.jpg"),
                 new Card("Sora", "No Game No Life", 2, "http://d2l56h9h5tj8ue.cloudfront.net/images/cards/sora-no-game-no-life-2.jpg"),
                 new Card("Sora", "No Game No Life", 3, "http://d2l56h9h5tj8ue.cloudfront.net/images/cards/versioned/sora-no-game-no-life-3-1.jpg"),
-                new Card("Sora", "No Game No Life", 4, "https://static.zerochan.net/Sora.%28No.Game.No.Life%29.full.1813355.jpg"),
+                new Card("Sora", "No Game No Life", 4, "https://i.pinimg.com/564x/e6/9e/57/e69e5721a24adf5f9d3a4d3cb9959bd3.jpg"),
                 new Card("Rachel Gardner", "Angels Of Death", 1),
                 new Card("Rachel Gardner", "Angels Of Death", 2),
                 new Card("Rachel Gardner", "Angels Of Death", 3),

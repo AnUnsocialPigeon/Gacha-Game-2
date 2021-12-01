@@ -21,9 +21,6 @@ namespace Gacha_Game_2.OtherWindows {
         public PlayerData Player;
         private Random rnd = new Random();
 
-        // Threader Vars
-        private List<Card>[] Editions = new List<Card>[4];
-
         public CardRollWindow(List<string> cardUris, PlayerData playerData, List<Card>[] allCards, Dictionary<string, int> ownedCards, Card[] rolledCards) {
             InitializeComponent();
 
@@ -120,6 +117,8 @@ namespace Gacha_Game_2.OtherWindows {
                 AllCards[ActualEd[2]][rnd.Next(0, AllCards[ActualEd[2]].Count)]
             };
 
+            Player.CardGrabs = new bool[] { false, false, false, };
+
             DisplayCards();
             RollBTN.Content = Player.ExtraRoll == 0 ? "Roll (Unavaliable)" : RollBTN.Content;
             FileHandler.SavePlayerData(Player);
@@ -140,12 +139,12 @@ namespace Gacha_Game_2.OtherWindows {
             CardInfo2TXTBLOCK.Text = RolledCards[1].Name + "\n" + RolledCards[1].Anime + "\nED: " + RolledCards[1].Edition;
             CardInfo3TXTBLOCK.Text = RolledCards[2].Name + "\n" + RolledCards[2].Anime + "\nED: " + RolledCards[2].Edition;
 
-            Grab1BTN.IsEnabled = true;
-            Grab2BTN.IsEnabled = true;
-            Grab3BTN.IsEnabled = true;
-            Grab1BTN.Opacity = 1d;
-            Grab2BTN.Opacity = 1d;
-            Grab3BTN.Opacity = 1d;
+            Grab1BTN.IsEnabled = !Player.CardGrabs[0];
+            Grab2BTN.IsEnabled = !Player.CardGrabs[1];
+            Grab3BTN.IsEnabled = !Player.CardGrabs[2];
+            Grab1BTN.Opacity = Player.CardGrabs[0] ? 0.5d : 1d;
+            Grab2BTN.Opacity = Player.CardGrabs[1] ? 0.5d : 1d;
+            Grab3BTN.Opacity = Player.CardGrabs[2] ? 0.5d : 1d;
         }
         #endregion
 
@@ -176,6 +175,7 @@ namespace Gacha_Game_2.OtherWindows {
             FileHandler.SaveOwnedCards(OwnedCards);
 
             // Reprecussions
+            Player.CardGrabs[int.Parse((sender as Button).Tag.ToString())] = true;
             (sender as Button).IsEnabled = false;
             (sender as Button).Opacity = 0.5d;
 

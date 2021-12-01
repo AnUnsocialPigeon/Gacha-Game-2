@@ -41,11 +41,19 @@ namespace Gacha_Game_2.OtherWindows {
             OwnedCards = ownedCards;
             Player = player;
             UpdatePlayerInfoBox();
+            RefreshAllListBoxes();
 
+        }
 
+        /// <summary>
+        /// Refreshes the entire screen worth of cards
+        /// </summary>
+        private void RefreshAllListBoxes() {
             // Finding all cards that the user owns - Orders too
+            CardLSTBOX.Items.Clear();
             for (int ED = AllCards.Length - 1; ED >= 0; ED--) {
                 foreach (Card c in AllCards[ED]) {
+                  
                     if (OwnedCards.ContainsKey(Formatter.FormatOwnedCards(c))) {
                         CreateLstBoxData(c, CardLSTBOX.Items.Count);
                     }
@@ -87,14 +95,14 @@ namespace Gacha_Game_2.OtherWindows {
                 Width = 157,
             };
             Button combineUp = new Button {
-                Content = c.Edition == 4 ? "Max Edition" : string.Format("Trade Up {0} for ED{1}", (15 - (3 * (c.Edition - 1))).ToString(), c.Edition + 1),
+                Content = Formatter.FormatInvenButtonContent(c),
                 Tag = c,
                 Margin = new Thickness(10, 0, 10, 0),
             };
             combineUp.Click += new RoutedEventHandler(TradeUpBTN_Click);
             Button sellBTN = new Button {
-                Content = string.Format("Sell for {0}", (c.Rarity * 200) + (c.Level * 20)),
-                Tag = new string[] { ((c.Rarity * 200) + (c.Level * 40)).ToString(),
+                Content = Formatter.FormatInvenSellPrice(c),
+                Tag = new string[] { Globals.CardSellPrice(c).ToString(),
                     Formatter.FormatOwnedCards(c),
                     JsonConvert.SerializeObject(c) },
                 Margin = new Thickness(10, 0, 10, 0),
@@ -154,8 +162,43 @@ namespace Gacha_Game_2.OtherWindows {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         public void TradeUpBTN_Click(object sender, RoutedEventArgs e) {
-            if (((sender as Button).Tag as Card).Edition >= 4) return;
+            Card tradeUpCard = (sender as Button).Tag as Card;
+            if (tradeUpCard.Edition >= 4) return;
 
+            // if they have enough cards, sort it out.
+            string cardUri = Formatter.FormatOwnedCards(tradeUpCard);
+            if (OwnedCards[cardUri] >= Globals.CardTradeUpCount(tradeUpCard.Edition)) {
+                OwnedCards[cardUri] -= Globals.CardTradeUpCount(tradeUpCard.Edition);
+
+                // Getting next card
+                Card nextCard = new Card(tradeUpCard);
+                nextCard.Edition++;
+                string nextCardUri = Formatter.FormatOwnedCards(nextCard);
+
+                // Adding the next card up
+                if (OwnedCards.ContainsKey(nextCardUri)) {
+                    OwnedCards[nextCardUri]++;
+                }
+                else {
+                    OwnedCards.Add(nextCardUri, 1);
+                }
+
+                //// Updating GUI
+                if (OwnedCards[cardUri] == 0) 
+                    OwnedCards.Remove(cardUri);
+                //    CardLSTBOX.Items.Remove((sender as Button).Parent);
+                //}
+
+                    //// Setting
+                    //else (sender as Button).Content = Formatter.FormatInvenButtonContent(tradeUpCard);
+
+                    FileHandler.SaveOwnedCards(OwnedCards);
+                RefreshAllListBoxes(); // Very Lazy :( 
+                UpdatePlayerInfoBox();
+            }
+
+            else MessageBox.Show("Not enough cards to trade up", "Trade Up Failed!", MessageBoxButton.OK);
+        
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gacha_Game_2.GameData;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -9,6 +10,13 @@ namespace Gacha_Game_2.Classes {
     public class Card {
         public Card() { }
         public Card(Card c) {
+            Name = c.Name;
+            Anime = c.Anime;
+            Edition = c.Edition;
+            ImgURL = c.ImgURL;
+            ArtCredit = c.ArtCredit;
+        }
+        public Card(ED4Card c) {
             Name = c.Name;
             Anime = c.Anime;
             Edition = c.Edition;

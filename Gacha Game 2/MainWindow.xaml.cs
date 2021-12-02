@@ -28,6 +28,7 @@ namespace Gacha_Game_2 {
         /// Defualt Constructor for MainWindow
         /// </summary>
         public MainWindow() {
+            #region FileChecks
             // First time setup
             if (!Directory.Exists(AssetsDir)) Directory.CreateDirectory(AssetsDir);
             if (!Directory.Exists(CardsDir)) Directory.CreateDirectory(CardsDir);
@@ -45,7 +46,8 @@ namespace Gacha_Game_2 {
                 Player = new PlayerData(l.Username.Text, 2500);
                 FileHandler.SavePlayerData(Player);
             }
-
+            #endregion
+            
             // Load everything
             Player = FileHandler.LoadPlayerData();
             OwnedCards = FileHandler.LoadOwnedCards();
@@ -66,6 +68,8 @@ namespace Gacha_Game_2 {
                 LoadCardsFromLocalDB();
 
                 // Will give a free Albedo for first time join!
+                OwnedCards.Add(Formatter.FormatOwnedCards(FileHandler.LoadCardData(CardsDir + "Albedo_Genshin-Impact_4.dat")), 1);
+                _ = MessageBox.Show("You have been given a free ED4 Albedo - on us!\nThank you for playing!", "Free gift!", MessageBoxButton.OK);
             }
 
             InitializeComponent();
@@ -183,10 +187,14 @@ namespace Gacha_Game_2 {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void TimerUpdates(object sender, ElapsedEventArgs e) {
-            string daily = Player.LastDailyTime.AddHours(6).CompareTo(DateTime.Now) <= 0 ? "+1000g" :
-                new DateTime(Math.Abs((DateTime.Now.AddHours(-6) - Player.LastDailyTime).Ticks)).ToString("HH:mm:ss");
-            Dispatcher.Invoke(() => { if (daily == "+1000g" && !DailyBTN.IsEnabled) { DailyBTN.IsEnabled = true; } });
-            _ = Dispatcher.Invoke(() => DailyBTN.Content = string.Format("Daily ({0})", daily));
+            try {
+                string daily = Player.LastDailyTime.AddHours(6).CompareTo(DateTime.Now) <= 0 ? "+1000g" :
+                    new DateTime(Math.Abs((DateTime.Now.AddHours(-6) - Player.LastDailyTime).Ticks)).ToString("HH:mm:ss");
+                Dispatcher.Invoke(() => { if (daily == "+1000g" && !DailyBTN.IsEnabled) { DailyBTN.IsEnabled = true; } });
+                _ = Dispatcher.Invoke(() => DailyBTN.Content = string.Format("Daily ({0})", daily));
+            }
+            catch { return; }
+
         }
 
     }

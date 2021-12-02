@@ -68,6 +68,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="GameData\Card.cs" />
+    <Compile Include="GameData\ED4Card.cs" />
     <Compile Include="GameData\FileHandler.cs" />
     <Compile Include="GameData\Formatters.cs" />
     <Compile Include="GameData\Globals.cs" />

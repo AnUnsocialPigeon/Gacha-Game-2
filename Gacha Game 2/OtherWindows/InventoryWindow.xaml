@@ -37,7 +37,14 @@
             <Setter Property="Background" Value="#66448888"/>
             <Setter Property="Foreground" Value="White"/>
         </Style>
+        
+        <!-- For scroll amount -->
+        <Style TargetType="ListBox">
+            <Setter Property="ScrollViewer.CanContentScroll" Value="False"/>
+        </Style>
     </Window.Resources>
+    
+    
     <Grid Name="MainGrid">
         <ListBox Name="CardLSTBOX" Background="#BB101010" Margin="1,105,1,0"/>
         <TextBlock Name="InfoTXTBLOCK" Margin="10,10,10,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="90"/>

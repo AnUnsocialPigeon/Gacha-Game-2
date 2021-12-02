@@ -68,10 +68,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="GameData\Card.cs" />
-    <Compile Include="GameData\ED4Card.cs" />
     <Compile Include="GameData\FileHandler.cs" />
     <Compile Include="GameData\Formatters.cs" />
     <Compile Include="GameData\Globals.cs" />
+    <Compile Include="GameData\InventoryData.cs" />
     <Compile Include="GameData\Networking.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

@@ -5,15 +5,29 @@ using System.IO;
 using System.Text;
 
 namespace Gacha_Game_2.GameData {
+    /// <summary>
+    /// A class to handle all saving and loading functions of any data.
+    /// </summary>
     public class FileHandler {
         #region PlayerData
-        public static void SavePlayerData(PlayerData player) => File.WriteAllText(Globals.PlayerDataFile, JsonConvert.SerializeObject(player));
+        public static void SavePlayerData(PlayerData player) => 
+            File.WriteAllText(Globals.PlayerDataFile, JsonConvert.SerializeObject(player));
         public static PlayerData LoadPlayerData() {
-            if (!File.Exists(Globals.PlayerDataFile)) return new PlayerData();
-            return JsonConvert.DeserializeObject<PlayerData>(File.ReadAllText(Globals.PlayerDataFile));
+            return !File.Exists(Globals.PlayerDataFile)
+                ? new PlayerData()
+                : JsonConvert.DeserializeObject<PlayerData>(File.ReadAllText(Globals.PlayerDataFile));
         }
         #endregion
 
+        #region Inventory
+        public static void SaveInventoryData(InventoryData inventoryData) =>
+            File.WriteAllText(Globals.InventoryDataFile, JsonConvert.SerializeObject(inventoryData));
+        public static InventoryData LoadInventoryData() {
+            return !File.Exists(Globals.PlayerDataFile)
+                ? new InventoryData()
+                : JsonConvert.DeserializeObject<InventoryData>(File.ReadAllText(Globals.InventoryDataFile));
+        }
+        #endregion
 
         #region Cards
         /// <summary>
@@ -29,6 +43,7 @@ namespace Gacha_Game_2.GameData {
         /// </summary>
         /// <param name="card"></param>
         public static void SaveCardData(Card card) => File.WriteAllText(FormatCardSaveName(card), JsonConvert.SerializeObject(card), Encoding.ASCII);
+
         /// <summary>
         /// Saving multiple cards from json
         /// </summary>
@@ -37,6 +52,7 @@ namespace Gacha_Game_2.GameData {
             List<Card> cards = JsonConvert.DeserializeObject<List<Card>>(json);
             foreach (Card c in cards) SaveCardData(c);
         }
+
         /// <summary>
         /// Saving multiple cards
         /// </summary>
@@ -44,6 +60,7 @@ namespace Gacha_Game_2.GameData {
         public static void SaveMultipleCardData(List<Card> cards) {
             foreach (Card c in cards) SaveCardData(c);
         }
+
 
         /// <summary>
         /// Saves owned cards

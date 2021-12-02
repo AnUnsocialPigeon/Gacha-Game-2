@@ -10,24 +10,17 @@ namespace Gacha_Game_2.Classes {
         public PlayerData() { }
         public PlayerData(string username, int money){
             Username = username;
-            Money = money;
             LastRollTime = new DateTime(2000, 1, 1);
             LastGrabTime = new DateTime(2000, 1, 1);
             LastDailyTime = new DateTime(2000, 1, 1);
             CardGrabs = new bool[3] { false, false, false };
-            ExtraGrab = 0;
-            ExtraRoll = 0;
         }
 
         public string Username { get; set; }
-        public int Money { get; set; }
-        public int Tickets { get; set; }
         public DateTime LastRollTime { get; set; }
         public DateTime LastGrabTime { get; set; }
         public DateTime LastDailyTime { get; set; }
         public bool[] CardGrabs { get; set; }
-        public int ExtraGrab { get; set; }
-        public int ExtraRoll { get; set; }
 
     }
 }

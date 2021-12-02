@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,10 +20,14 @@ namespace Gacha_Game_2 {
 
         // Player Data
         public static PlayerData Player = new PlayerData();
+        public static InventoryData Inventory = new InventoryData();
         public static List<Card>[] AllCards = new List<Card>[] { new List<Card>(), new List<Card>(), new List<Card>(), new List<Card>() };
         public static Dictionary<string, int> OwnedCards = new Dictionary<string, int>();
         public static Card[] RolledCards = null;
         public static List<string> CardDir = new List<string>();
+
+        // Internal Constants
+        private const int DailyAmount = 1000;
 
         /// <summary>
         /// Defualt Constructor for MainWindow
@@ -46,10 +51,13 @@ namespace Gacha_Game_2 {
                 Player = new PlayerData(l.Username.Text, 2500);
                 FileHandler.SavePlayerData(Player);
             }
+            if (!File.Exists(InventoryDataFile)) FileHandler.SaveInventoryData(Inventory);
+            
             #endregion
             
             // Load everything
             Player = FileHandler.LoadPlayerData();
+            Inventory = FileHandler.LoadInventoryData();
             OwnedCards = FileHandler.LoadOwnedCards();
             RolledCards = FileHandler.LoadRolledCards();
 
@@ -67,12 +75,19 @@ namespace Gacha_Game_2 {
                 // If the card loading attempt failed, will retry
                 LoadCardsFromLocalDB();
 
-                // Will give a free Albedo for first time join!
+                // First time join!
                 OwnedCards.Add(Formatter.FormatOwnedCards(FileHandler.LoadCardData(CardsDir + "Albedo_Genshin-Impact_4.dat")), 1);
+                Inventory.ExtraRoll = 2;
+                Inventory.ExtraGrab = 5;
+                FileHandler.SaveOwnedCards(OwnedCards);
+                FileHandler.SaveInventoryData(Inventory);
                 _ = MessageBox.Show("You have been given a free ED4 Albedo - on us!\nThank you for playing!", "Free gift!", MessageBoxButton.OK);
+                _ = MessageBox.Show("You have been given 2 free Extra Rolls - on us!\nThank you for playing!", "Free gift!", MessageBoxButton.OK);
+                _ = MessageBox.Show("You have been given 5 free Extra Grabs - on us!\nThank you for playing!", "Free gift!", MessageBoxButton.OK);
             }
 
             InitializeComponent();
+            UpdateInfoBox();
 
             // Timers
             DailyBTN.IsEnabled = false;
@@ -99,6 +114,17 @@ namespace Gacha_Game_2 {
             }
         }
 
+        /// <summary>
+        /// Updates the Infomation in the InfoBox
+        /// </summary>
+        private void UpdateInfoBox() {
+            InfoBox.Text = $"Player: {Player.Username}\n" +
+                $"Money: {Inventory.Money}g\n" +
+                $"Total Cards: {OwnedCards.Sum(x => x.Value)}\n" +
+                $"Extra Rolls: {Inventory.ExtraRoll}\n" +
+                $"Extra Grabs: {Inventory.ExtraGrab}";
+        }
+
         #region Buttons
         /// <summary>
         /// When you roll for cards
@@ -106,7 +132,7 @@ namespace Gacha_Game_2 {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void RollForCards_Click(object sender, RoutedEventArgs e) {
-            CardRollWindow c = new CardRollWindow(CardDir, Player, AllCards, OwnedCards, RolledCards);
+            CardRollWindow c = new CardRollWindow(CardDir, Player, Inventory, AllCards, OwnedCards, RolledCards);
             Hide();
             _ = c.ShowDialog();
             Show();
@@ -114,6 +140,7 @@ namespace Gacha_Game_2 {
             RolledCards = c.RolledCards;
             Player = c.Player;
             OwnedCards = c.OwnedCards;
+            UpdateInfoBox();
         }
 
         /// <summary>
@@ -122,13 +149,15 @@ namespace Gacha_Game_2 {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Inventory_Click(object sender, RoutedEventArgs e) {
-            InventoryWindow i = new InventoryWindow(OwnedCards, AllCards, Player);
+            InventoryWindow i = new InventoryWindow(OwnedCards, AllCards, Player, Inventory);
             Hide();
             _ = i.ShowDialog();
             Show();
             Player = i.Player;
+            Inventory = i.Inventory;
             OwnedCards = i.OwnedCards;
             AllCards = i.AllCards;
+            UpdateInfoBox();
         }
 
         /// <summary>
@@ -136,9 +165,7 @@ namespace Gacha_Game_2 {
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Battle_Click(object sender, RoutedEventArgs e) {
-
-        }
+        private void Battle_Click(object sender, RoutedEventArgs e) { }
 
         /// <summary>
         /// Shop button
@@ -146,11 +173,12 @@ namespace Gacha_Game_2 {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Shop_Click(object sender, RoutedEventArgs e) {
-            ShopWindow s = new ShopWindow(Player);
+            ShopWindow s = new ShopWindow(Inventory);
             Hide();
             _ = s.ShowDialog();
             Show();
-            Player = s.Player;
+            Inventory = s.Inventory;
+            UpdateInfoBox();
         }
 
         /// <summary>
@@ -162,8 +190,10 @@ namespace Gacha_Game_2 {
         private void DailyBTN_Click(object sender, RoutedEventArgs e) {
             Player.LastDailyTime = DateTime.Now;
             (sender as Button).IsEnabled = false;
-            Player.Money += 1000;
+            Inventory.Money += DailyAmount;
             FileHandler.SavePlayerData(Player);
+            FileHandler.SaveInventoryData(Inventory);
+            UpdateInfoBox();
         }
 
         /// <summary>
@@ -172,12 +202,14 @@ namespace Gacha_Game_2 {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void SettingsBTN_Click(object sender, RoutedEventArgs e) {
-            SettingsWindow s = new SettingsWindow(Player, CardDir);
+            SettingsWindow s = new SettingsWindow(Player, Inventory, CardDir);
             Hide();
             _ = s.ShowDialog();
             Show();
             Player = s.Player;
+            Inventory = s.Inventory;
             CardDir = s.CardDir;
+            UpdateInfoBox();
         }
         #endregion
 
@@ -190,11 +222,10 @@ namespace Gacha_Game_2 {
             try {
                 string daily = Player.LastDailyTime.AddHours(6).CompareTo(DateTime.Now) <= 0 ? "+1000g" :
                     new DateTime(Math.Abs((DateTime.Now.AddHours(-6) - Player.LastDailyTime).Ticks)).ToString("HH:mm:ss");
-                Dispatcher.Invoke(() => { if (daily == "+1000g" && !DailyBTN.IsEnabled) { DailyBTN.IsEnabled = true; } });
-                _ = Dispatcher.Invoke(() => DailyBTN.Content = string.Format("Daily ({0})", daily));
+                Dispatcher.Invoke(() => { if (daily == $"+{DailyAmount}g" && !DailyBTN.IsEnabled) { DailyBTN.IsEnabled = true; } });
+                _ = Dispatcher.Invoke(() => DailyBTN.Content = $"Daily ({daily})");
             }
             catch { return; }
-
         }
 
     }

@@ -8,12 +8,16 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 
 namespace Gacha_Game_2.GameData {
+    /// <summary>
+    /// A global data class
+    /// </summary>
     public class Globals {
         // Dir Setup
         public static string AssetsDir => Directory.GetCurrentDirectory() + @"\Assets\";
         public static string CardsDir => Directory.GetCurrentDirectory() + @"\Cards\";
         public static string GameDataDir => Directory.GetCurrentDirectory() + @"\GameData\";
         public static string PlayerDataFile => GameDataDir + "PlayerData.dat";
+        public static string InventoryDataFile => GameDataDir + "Inventory.dat";
         public static string OwnedCardsFile => GameDataDir + "Cards.dat";
         public static string LogFile => GameDataDir + "Log.dat";
         public static string ServerDetailsFile => GameDataDir + "ServerInfo.txt";
@@ -34,8 +38,8 @@ namespace Gacha_Game_2.GameData {
         // BorderBrush Colors for the cards depending on their ED
         public static SolidColorBrush[] EDBorderColors = new SolidColorBrush[]{
             new SolidColorBrush(Color.FromArgb(255, 128, 128, 128)),
-            new SolidColorBrush(Color.FromArgb(255, 100, 164, 164)),
-            new SolidColorBrush(Color.FromArgb(255, 164, 164, 100)),
+            new SolidColorBrush(Color.FromArgb(255, 150, 210, 210)),
+            new SolidColorBrush(Color.FromArgb(255, 255, 255, 125)),
             new SolidColorBrush(Color.FromArgb(255, 255, 50, 50)),
         };
     }

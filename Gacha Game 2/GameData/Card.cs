@@ -15,22 +15,16 @@ namespace Gacha_Game_2.Classes {
             Edition = c.Edition;
             ImgURL = c.ImgURL;
             ArtCredit = c.ArtCredit;
-        }
-        public Card(ED4Card c) {
-            Name = c.Name;
-            Anime = c.Anime;
-            Edition = c.Edition;
-            ImgURL = c.ImgURL;
-            ArtCredit = c.ArtCredit;
+            Level = c.Level;
+            Effort = c.Effort;
         }
 
-        /// Attempts to use Karuta's IMG Base for the imageURL
+        // Attempts to use Karuta's IMG Base for the imageURL
         public Card(string name, string anime, int ed) {
             Name = name;
             Anime = anime;
             Edition = ed;
             ImgURL = string.Format("http://d2l56h9h5tj8ue.cloudfront.net/images/cards/{0}-{1}.jpg", name.ToLower().Trim().Replace(' ', '-'), ed);
-            ArtCredit = "";
         }
 
         public Card(string name, string anime, int ed, string imgURL) {
@@ -38,9 +32,7 @@ namespace Gacha_Game_2.Classes {
             Anime = anime;
             Edition = ed;
             ImgURL = imgURL;
-            ArtCredit = "";
         }
-        
         public Card(string name, string anime, int ed, string imgURL, string artCredit) {
             Name = name;
             Anime = anime;
@@ -48,11 +40,23 @@ namespace Gacha_Game_2.Classes {
             ImgURL = imgURL;
             ArtCredit = artCredit;
         }
+        
+        public Card(string name, string anime, int ed, string imgURL, string artCredit, int lvl, int ef) {
+            Name = name;
+            Anime = anime;
+            Edition = ed;
+            ImgURL = imgURL;
+            ArtCredit = artCredit;
+            Level = lvl;
+            Effort = ef;
+        }
 
         public string Name { get; set; }
         public string Anime { get; set; }
         public int Edition { get; set; }
         public string ImgURL { get; set; }
-        public string ArtCredit { get; set; }
+        public string ArtCredit { get; set; } = "";
+        public int Level { get; set; } = 1;
+        public int Effort { get; set; } = 100;
     }
 }

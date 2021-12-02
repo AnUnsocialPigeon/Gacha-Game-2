@@ -21,11 +21,12 @@ namespace Gacha_Game_2.OtherWindows {
     /// Interaction logic for InventoryWindow.xaml
     /// </summary>
     public partial class InventoryWindow : Window {
-        public string BgUri { get { return Globals.BackgroundImgFile; } }
+        public string BgUri => Globals.BackgroundImgFile;
 
         public Dictionary<string, int> OwnedCards = new Dictionary<string, int>();
         public List<Card>[] AllCards = new List<Card>[4];
         public PlayerData Player = new PlayerData();
+        public InventoryData Inventory = new InventoryData();
 
         private Border CardImageTemplate = new Border();
 
@@ -34,12 +35,14 @@ namespace Gacha_Game_2.OtherWindows {
         /// </summary>
         /// <param name="ownedCards"></param>
         /// <param name="allCards"></param>
-        public InventoryWindow(Dictionary<string, int> ownedCards, List<Card>[] allCards, PlayerData player) {
+        public InventoryWindow(Dictionary<string, int> ownedCards, List<Card>[] allCards, PlayerData player, InventoryData inventory) {
             InitializeComponent();
 
             AllCards = allCards;
             OwnedCards = ownedCards;
             Player = player;
+            Inventory = inventory;
+
             UpdatePlayerInfoBox();
             RefreshAllListBoxes();
 
@@ -53,7 +56,6 @@ namespace Gacha_Game_2.OtherWindows {
             CardLSTBOX.Items.Clear();
             for (int ED = AllCards.Length - 1; ED >= 0; ED--) {
                 foreach (Card c in AllCards[ED]) {
-                  
                     if (OwnedCards.ContainsKey(Formatter.FormatOwnedCards(c))) {
                         CreateLstBoxData(c, CardLSTBOX.Items.Count);
                     }
@@ -81,7 +83,7 @@ namespace Gacha_Game_2.OtherWindows {
                     Width = 145,
                     Source = new BitmapImage(new Uri(c.ImgURL))
                 },
-                BorderThickness = new Thickness(5, 5, 5, 5),
+                BorderThickness = new Thickness(7, 7, 7, 7),
                 BorderBrush = Globals.EDBorderColors[c.Edition - 1],
                 CornerRadius = new CornerRadius(10),
                 Height = 198,
@@ -110,10 +112,10 @@ namespace Gacha_Game_2.OtherWindows {
             sellBTN.Click += new RoutedEventHandler(SellBTN_Click);
 
             // Adding the inventory item to the lsit
-            g.Children.Add(border);
-            g.Children.Add(cardInfoBox);
-            g.Children.Add(combineUp);
-            g.Children.Add(sellBTN);
+            _ = g.Children.Add(border);
+            _ = g.Children.Add(cardInfoBox);
+            _ = g.Children.Add(combineUp);
+            _ = g.Children.Add(sellBTN);
             CardLSTBOX.Items.Insert(insertPos, g);
         }
 
@@ -121,9 +123,9 @@ namespace Gacha_Game_2.OtherWindows {
         /// Updates the player info box
         /// </summary>
         private void UpdatePlayerInfoBox() {
-            int cardTotal = 0;
-            foreach (string v in OwnedCards.Keys) cardTotal += OwnedCards[v];
-            InfoTXTBLOCK.Text = string.Format("Player: {0}\nBalance: {1}g\nTotal Cards: {2}", Player.Username, Player.Money, cardTotal.ToString());
+            InfoTXTBLOCK.Text = $"Player: {Player.Username}\n" +
+                $"Balance: {Inventory.Money}g\n" +
+                $"Total Cards: {OwnedCards.Sum(x => x.Value)}";
         }
 
         /// <summary>
@@ -139,11 +141,11 @@ namespace Gacha_Game_2.OtherWindows {
 
             // Removing the selected card, and re-adding it at the correct place with updated information
             OwnedCards[senderTagString]--;
-            Player.Money += senderTagInt;
+            Inventory.Money += senderTagInt;
 
             // If they have no copies of that card left
             if (OwnedCards[senderTagString] <= 0) {
-                OwnedCards.Remove(senderTagString);
+                _ = OwnedCards.Remove(senderTagString);
                 CardLSTBOX.Items.Remove((sender as Button).Parent);
             }
             else {
@@ -154,6 +156,7 @@ namespace Gacha_Game_2.OtherWindows {
 
             UpdatePlayerInfoBox();
             FileHandler.SaveOwnedCards(OwnedCards);
+            FileHandler.SaveInventoryData(Inventory);
         }
 
         /// <summary>
@@ -189,16 +192,17 @@ namespace Gacha_Game_2.OtherWindows {
                 //    CardLSTBOX.Items.Remove((sender as Button).Parent);
                 //}
 
-                    //// Setting
-                    //else (sender as Button).Content = Formatter.FormatInvenButtonContent(tradeUpCard);
+                //// Setting
+                //else (sender as Button).Content = Formatter.FormatInvenButtonContent(tradeUpCard);
 
-                    FileHandler.SaveOwnedCards(OwnedCards);
+                FileHandler.SaveOwnedCards(OwnedCards);
                 RefreshAllListBoxes(); // Very Lazy :( 
                 UpdatePlayerInfoBox();
+                return;
             }
-
-            else MessageBox.Show("Not enough cards to trade up", "Trade Up Failed!", MessageBoxButton.OK);
-        
+            _ = MessageBox.Show("Not enough cards to trade up", "Trade Up Failed!", MessageBoxButton.OK);
         }
+
+
     }
 }

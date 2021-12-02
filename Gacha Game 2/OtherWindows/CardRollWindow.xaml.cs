@@ -12,21 +12,21 @@ namespace Gacha_Game_2.OtherWindows {
     /// Interaction logic for CardDropWindow.xaml
     /// </summary>
     public partial class CardRollWindow : Window {
-        public string BgUri { get { return Globals.BackgroundImgFile; } }
+        public string BgUri => Globals.BackgroundImgFile;
 
         public Card[] RolledCards;
-        private List<string> CardUri;
         public Dictionary<string, int> OwnedCards = new Dictionary<string, int>();
         public List<Card>[] AllCards;
         public PlayerData Player;
-        private Random rnd = new Random();
+        public InventoryData Inventory;
+        private readonly Random rnd = new Random();
 
-        public CardRollWindow(List<string> cardUris, PlayerData playerData, List<Card>[] allCards, Dictionary<string, int> ownedCards, Card[] rolledCards) {
+        public CardRollWindow(List<string> cardUris, PlayerData playerData, InventoryData inventory, List<Card>[] allCards, Dictionary<string, int> ownedCards, Card[] rolledCards) {
             InitializeComponent();
 
             // Setup
-            CardUri = cardUris;
             Player = playerData;
+            Inventory = inventory;
             AllCards = allCards;
             OwnedCards = ownedCards;
             RolledCards = rolledCards;
@@ -71,9 +71,9 @@ namespace Gacha_Game_2.OtherWindows {
 
                 // Updating the GUI 
                 Dispatcher.Invoke(() => {
-                    BalTXTBLOC.Text = string.Format("\n  Bal: {0}g\n  Free Drop: {1}\n  Grab: {2}\n  Extra Rolls: {3}\n  Extra Grabs: {4}\n  Grab Period: lol", Player.Money, freeDrop, grab, Player.ExtraRoll, Player.ExtraGrab);
+                    BalTXTBLOC.Text = string.Format("\n  Bal: {0}g\n  Free Drop: {1}\n  Grab: {2}\n  Extra Rolls: {3}\n  Extra Grabs: {4}\n  Grab Period: lol", Inventory.Money, freeDrop, grab, Inventory.ExtraRoll, Inventory.ExtraGrab);
                     if (RollBTN.Content.ToString() == "Roll (Unavaliable)" && freeDrop == "Now") RollBTN.Content = "Roll (Free)";
-                    else if (RollBTN.Content.ToString() == "Roll (Unavaliable)" && freeDrop != "Now" && Player.ExtraRoll > 0) RollBTN.Content = "Roll (Extra Roll)";
+                    else if (RollBTN.Content.ToString() == "Roll (Unavaliable)" && freeDrop != "Now" && Inventory.ExtraRoll > 0) RollBTN.Content = "Roll (Extra Roll)";
                 });
             }
             catch { }
@@ -90,11 +90,11 @@ namespace Gacha_Game_2.OtherWindows {
                 LogLSTBOX.Items.Insert(0, "Free Roll used!");
                 Player.LastRollTime = DateTime.Now;
             }
-            else if (Player.ExtraRoll <= 0) {
+            else if (Inventory.ExtraRoll <= 0) {
                 return;
             }
             else {
-                Player.ExtraRoll--;
+                Inventory.ExtraRoll--;
                 LogLSTBOX.Items.Insert(0, "Extra Roll used!");
             }
 
@@ -120,8 +120,9 @@ namespace Gacha_Game_2.OtherWindows {
             Player.CardGrabs = new bool[] { false, false, false, };
 
             DisplayCards();
-            RollBTN.Content = Player.ExtraRoll == 0 ? "Roll (Unavaliable)" : RollBTN.Content;
+            RollBTN.Content = Inventory.ExtraRoll == 0 ? "Roll (Unavaliable)" : RollBTN.Content;
             FileHandler.SavePlayerData(Player);
+            FileHandler.SaveInventoryData(Inventory);
             FileHandler.SaveRolledCards(RolledCards);
         }
 
@@ -135,9 +136,17 @@ namespace Gacha_Game_2.OtherWindows {
             Img1Border.BorderBrush = Globals.EDBorderColors[RolledCards[0].Edition - 1];
             Img2Border.BorderBrush = Globals.EDBorderColors[RolledCards[1].Edition - 1];
             Img3Border.BorderBrush = Globals.EDBorderColors[RolledCards[2].Edition - 1];
-            CardInfo1TXTBLOCK.Text = RolledCards[0].Name + "\n" + RolledCards[0].Anime + "\nED: " + RolledCards[0].Edition;
-            CardInfo2TXTBLOCK.Text = RolledCards[1].Name + "\n" + RolledCards[1].Anime + "\nED: " + RolledCards[1].Edition;
-            CardInfo3TXTBLOCK.Text = RolledCards[2].Name + "\n" + RolledCards[2].Anime + "\nED: " + RolledCards[2].Edition;
+            CardInfo1TXTBLOCK.Text = $"{RolledCards[0].Name}\n{RolledCards[0].Anime}\nED: {RolledCards[0].Edition}";
+            CardInfo2TXTBLOCK.Text = $"{RolledCards[1].Name}\n{RolledCards[1].Anime}\nED: {RolledCards[1].Edition}";
+            CardInfo3TXTBLOCK.Text = $"{RolledCards[2].Name}\n{RolledCards[2].Anime}\nED: {RolledCards[2].Edition}";
+
+            // Only really for if first time setup
+            Img1.Opacity = 1f;
+            Img2.Opacity = 1f;
+            Img3.Opacity = 1f;
+            Img1Border.Opacity = 1f;
+            Img2Border.Opacity = 1f;
+            Img3Border.Opacity = 1f;
 
             Grab1BTN.IsEnabled = !Player.CardGrabs[0];
             Grab2BTN.IsEnabled = !Player.CardGrabs[1];
@@ -155,8 +164,8 @@ namespace Gacha_Game_2.OtherWindows {
         /// <param name="e"></param>
         private void GrabBTN_Click(object sender, RoutedEventArgs e) {
             // Free grab
-            bool gratuity = (Player.LastGrabTime.AddMinutes(5).CompareTo(DateTime.Now) <= 0);
-            if (!gratuity && Player.ExtraGrab <= 0) {
+            bool gratuity = Player.LastGrabTime.AddMinutes(5).CompareTo(DateTime.Now) <= 0;
+            if (!gratuity && Inventory.ExtraGrab <= 0) {
                 LogLSTBOX.Items.Insert(0, "No Grabs!");
                 return;
             }
@@ -168,8 +177,12 @@ namespace Gacha_Game_2.OtherWindows {
             // Adding to cards
             Card c = RolledCards[int.Parse((sender as Button).Tag.ToString())];
             string uri = Formatter.FormatOwnedCards(c);
-            if (OwnedCards.ContainsKey(uri)) OwnedCards[uri]++;
-            else OwnedCards.Add(uri, 1);
+            if (OwnedCards.ContainsKey(uri)) {
+                OwnedCards[uri]++;
+            }
+            else {
+                OwnedCards.Add(uri, 1);
+            }
 
             // Saving
             FileHandler.SaveOwnedCards(OwnedCards);
@@ -181,13 +194,16 @@ namespace Gacha_Game_2.OtherWindows {
 
             LogLSTBOX.Items.Insert(0, string.Format("Card {0} has been grabbed!", c.Name));
 
-            if (gratuity) Player.LastGrabTime = DateTime.Now;
+            if (gratuity) {
+                Player.LastGrabTime = DateTime.Now;
+            }
             else {
-                Player.ExtraGrab--;
-                LogLSTBOX.Items.Insert(1, string.Format("Extra Grab used!\nYou have {0} remaining.", Player.ExtraGrab));
+                Inventory.ExtraGrab--;
+                LogLSTBOX.Items.Insert(1, string.Format("Extra Grab used!\nYou have {0} remaining.", Inventory.ExtraGrab));
             }
 
             FileHandler.SavePlayerData(Player);
+            FileHandler.SaveInventoryData(Inventory);
         }
 
 

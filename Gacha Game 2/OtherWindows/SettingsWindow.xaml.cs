@@ -33,6 +33,7 @@ namespace Gacha_Game_2.OtherWindows {
                 ToDel.Add(Globals.PlayerDataFile);
                 ToDel.Add(Globals.InventoryDataFile);
                 ToDel.Add(Globals.OwnedCardsFile);
+                ToDel.Add(Globals.WorkerCardsFile);
                 ToDel.Add(Globals.LogFile);
                 ToDel.Add(Globals.RolledCardsFile);
                 ToDel.Add(Globals.ServerDetailsFile);

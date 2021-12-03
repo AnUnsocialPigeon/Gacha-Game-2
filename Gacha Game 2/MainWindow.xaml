@@ -43,12 +43,15 @@
     </Window.Resources>
 
     <Grid Name="MainGrid">
-        <Button Name="SettingsBTN" Margin="700,10,10,429" Content="Settings" Click="SettingsBTN_Click"/>
+        <TextBlock Name="InfoBox" HorizontalAlignment="Left" Margin="290,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="202" Width="405" FontSize="24"/>
         <Button Name="RollForCardsBTN" Content="Roll for Cards" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="275" Height="64" FontSize="30" Click="RollForCards_Click" />
         <Button Name="InventoryBTN" Content="Inventory" HorizontalAlignment="Left" Margin="10,79,0,0" VerticalAlignment="Top" Width="275" Height="64" FontSize="30" Click="Inventory_Click" />
-        <Button Name="BattleBTN" Content="Battle" HorizontalAlignment="Left" Margin="10,148,0,0" VerticalAlignment="Top" Width="275" Height="64" FontSize="30" Click="Battle_Click" />
-        <TextBlock Name="InfoBox" HorizontalAlignment="Left" Margin="290,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="202" Width="405" FontSize="24"/>
-        <Button Name="ShopBTN" Content="Shop" HorizontalAlignment="Left" Margin="10,217,0,0" VerticalAlignment="Top" Width="275" Height="64" FontSize="30" Click="Shop_Click" />
+        <Button Name="ShopBTN" Content="Shop" HorizontalAlignment="Left" Margin="10,148,0,0" VerticalAlignment="Top" Width="275" Height="64" FontSize="30" Click="Shop_Click" />
+        <Button Name="WorkBTN" Content="Work" HorizontalAlignment="Left" Margin="10,217,0,0" VerticalAlignment="Top" Width="275" Height="64" FontSize="30" Click="Work_Click" />
+        <Button Name="BattleBTN" Content="Battle" HorizontalAlignment="Left" Margin="420,217,0,0" VerticalAlignment="Top" Width="275" Height="64" FontSize="30" Click="Battle_Click" />
+        
+        <!-- Misc -->
+        <Button Name="SettingsBTN" Margin="700,10,10,429" Content="Settings" Click="SettingsBTN_Click"/>
         <Button Name="DailyBTN" Content="Daily" HorizontalAlignment="Left" Margin="567,415,0,0" VerticalAlignment="Top" Width="217" Height="45" FontSize="16" Click="DailyBTN_Click" />
 
     </Grid>

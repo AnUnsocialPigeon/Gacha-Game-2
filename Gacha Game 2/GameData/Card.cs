@@ -8,7 +8,12 @@ using System.Threading.Tasks;
 
 namespace Gacha_Game_2.Classes {
     public class Card {
-        public Card() { }
+        public Card() {
+            Name = "";
+            Anime = "";
+            Edition = 0;
+            ImgURL = "";
+        }
         public Card(Card c) {
             Name = c.Name;
             Anime = c.Anime;

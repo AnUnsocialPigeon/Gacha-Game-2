@@ -41,6 +41,7 @@ namespace Gacha_Game_2 {
             if (!File.Exists(LogFile)) File.WriteAllText(LogFile, "");
             if (!File.Exists(ServerDetailsFile)) File.WriteAllText(ServerDetailsFile, "");
             if (!File.Exists(OwnedCardsFile)) FileHandler.SaveOwnedCards(OwnedCards);
+            if (!File.Exists(WorkerCardsFile)) FileHandler.SaveWorkerCards(new Card[4]);
             if (!File.Exists(RolledCardsFile)) FileHandler.SaveRolledCards(RolledCards);
             if (!File.Exists(PlayerDataFile)) {
                 LoginWindow l = new LoginWindow();
@@ -48,7 +49,7 @@ namespace Gacha_Game_2 {
                 if (!l.SubmitName) {
                     Environment.Exit(0);
                 }
-                Player = new PlayerData(l.Username.Text, 2500);
+                Player = new PlayerData(l.Username.Text);
                 FileHandler.SavePlayerData(Player);
             }
             if (!File.Exists(InventoryDataFile)) FileHandler.SaveInventoryData(Inventory);
@@ -210,6 +211,20 @@ namespace Gacha_Game_2 {
             Inventory = s.Inventory;
             CardDir = s.CardDir;
             UpdateInfoBox();
+        }
+        
+        /// <summary>
+        /// Loads the Work Window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Work_Click(object sender, RoutedEventArgs e) {
+            WorkWindow w = new WorkWindow(OwnedCards, AllCards, Player, Inventory);
+            Hide();
+            _ = w.ShowDialog();
+            Show();
+            Player = w.Player;
+            Inventory = w.Inventory;
         }
         #endregion
 

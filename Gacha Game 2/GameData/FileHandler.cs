@@ -10,7 +10,7 @@ namespace Gacha_Game_2.GameData {
     /// </summary>
     public class FileHandler {
         #region PlayerData
-        public static void SavePlayerData(PlayerData player) => 
+        public static void SavePlayerData(PlayerData player) =>
             File.WriteAllText(Globals.PlayerDataFile, JsonConvert.SerializeObject(player));
         public static PlayerData LoadPlayerData() {
             return !File.Exists(Globals.PlayerDataFile)
@@ -102,6 +102,24 @@ namespace Gacha_Game_2.GameData {
         public static string FormatCardSaveName(Card card) => string.Format("{0}{1}_{2}_{3}.dat", Globals.CardsDir, card.Name.Trim().Replace(' ', '-'), card.Anime.Trim().Replace(' ', '-'), card.Edition.ToString());
         #endregion
 
+        #region Workers
+        /// <summary>
+        /// Loads the worker cards from file
+        /// </summary>
+        /// <returns></returns>
+        public static Card[] LoadWorkerCards() {
+            return JsonConvert.DeserializeObject<Card[]>(File.ReadAllText(Globals.WorkerCardsFile));
+        }
+        /// <summary>
+        /// Saves the worker cards to file
+        /// </summary>
+        /// <param name="workers"></param>
+        public static void SaveWorkerCards(Card[] workers) {
+            File.WriteAllText(Globals.WorkerCardsFile, JsonConvert.SerializeObject(workers));
+        }
+
+
+        #endregion
 
     }
 }

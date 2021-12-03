@@ -1,10 +1,8 @@
 ﻿<Window x:Class="Gacha_Game_2.OtherWindows.CardRollWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Gacha_Game_2.OtherWindows"
-        xmlns:backgroundImg="clr-namespace:Gacha_Game_2.GameData"
         mc:Ignorable="d"
         x:Name="CardDrop"
         ResizeMode="NoResize"
@@ -44,7 +42,7 @@
     <Grid>
         <Button Name="RollBTN" Content="Roll (Unavaliable)" HorizontalAlignment="Center" Margin="516,10,9.6,278.2" VerticalAlignment="Center" Width="268" Height="51" FontSize="24" Click="RollBTN_Click"/>
         <TextBlock Name="BalTXTBLOC" FontSize="14" HorizontalAlignment="Center" Margin="515,66,10,145" TextWrapping="Wrap" VerticalAlignment="Center" Height="129" Width="269" LineHeight="10" Text="Hello" FontWeight="Bold"/>
-        <Border Name="Img1Border" CornerRadius="10" BorderThickness="7" BorderBrush="#FFFFFFFF" Margin="10,10,623.6,114.2" Opacity="0">
+        <Border Name="Img1Border" CornerRadius="10" BorderThickness="5" BorderBrush="#FFFFFFFF" Margin="10,10,623.6,114.2" Opacity="0">
             <Image Name="Img1" HorizontalAlignment="Left" Height="198" Margin="0.2,0.2,0,0" VerticalAlignment="Top" Width="145" Stretch="UniformToFill"/>
         </Border>
         <Border Name="Img2Border" CornerRadius="10" BorderThickness="7" BorderBrush="#FFFFFFFF" Margin="175,10,458.6,114.2" Opacity="0">

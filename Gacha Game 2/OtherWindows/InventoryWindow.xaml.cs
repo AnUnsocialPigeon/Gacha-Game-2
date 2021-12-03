@@ -69,41 +69,29 @@ namespace Gacha_Game_2.OtherWindows {
         /// <param name="c"></param>
         /// <param name="insertPos"></param>
         private void CreateLstBoxData(Card c, int insertPos) {
-            int width = (int)CardLSTBOX.Width;
-
             // Creating the inventory item
             UniformGrid g = new UniformGrid {
                 Columns = 4,
                 Margin = new Thickness(1, 1, 1, 1)
             };
 
-            Border border = new Border {
-                Child = new Image {
-                    Height = 198,
-                    Width = 145,
-                    Source = new BitmapImage(new Uri(c.ImgURL))
-                },
-                BorderThickness = new Thickness(7, 7, 7, 7),
-                BorderBrush = Globals.EDBorderColors[c.Edition - 1],
-                CornerRadius = new CornerRadius(10),
-                Height = 198,
-                Width = 145,
-            };
+            Border border = DisplayFormatting.CardImage(c);
+
             TextBlock cardInfoBox = new TextBlock {
-                Text = Formatter.FormatInvenInfoTextBlock(c, OwnedCards),
+                Text = Formatter.FormatInventoryInfoTextBlock(c, OwnedCards),
                 Background = new SolidColorBrush(Color.FromArgb(187, 16, 16, 16)),
                 Foreground = new SolidColorBrush(Color.FromArgb(187, 255, 255, 255)),
                 Margin = new Thickness(10, 0, 10, 0),
                 Width = 157,
             };
             Button combineUp = new Button {
-                Content = Formatter.FormatInvenButtonContent(c),
+                Content = Formatter.FormatInventoryButtonContent(c),
                 Tag = c,
                 Margin = new Thickness(10, 0, 10, 0),
             };
             combineUp.Click += new RoutedEventHandler(TradeUpBTN_Click);
             Button sellBTN = new Button {
-                Content = Formatter.FormatInvenSellPrice(c),
+                Content = Formatter.FormatInventorySellPrice(c),
                 Tag = new string[] { Globals.CardSellPrice(c).ToString(),
                     Formatter.FormatOwnedCards(c),
                     JsonConvert.SerializeObject(c) },
@@ -151,7 +139,7 @@ namespace Gacha_Game_2.OtherWindows {
             else {
                 // Updates the textblock's text
                 (((sender as Button).Parent as UniformGrid).Children[1] as TextBlock).Text =
-                    Formatter.FormatInvenInfoTextBlock(senderTagCard, OwnedCards);
+                    Formatter.FormatInventoryInfoTextBlock(senderTagCard, OwnedCards);
             }
 
             UpdatePlayerInfoBox();

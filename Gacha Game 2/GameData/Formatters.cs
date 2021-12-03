@@ -12,11 +12,24 @@ namespace Gacha_Game_2.GameData {
             return a[a.Length - 1] + "|" + c.Edition;
         }
 
-        public static string FormatInvenButtonContent(Card c) =>
-            c.Edition >= 4 ? "Max Edition" : string.Format("Trade Up {0} for ED{1}", Globals.CardTradeUpCount(c.Edition).ToString(), c.Edition + 1);
-        public static string FormatInvenSellPrice(Card c) =>
-            string.Format("Sell for {0}", Globals.CardSellPrice(c).ToString());
-        public static string FormatInvenInfoTextBlock(Card c, Dictionary<string, int> OwnedCards) =>
-            c.Name + "\n" + c.Anime + "\nEd: " + c.Edition + "\nOwned Copies: " + OwnedCards[FormatOwnedCards(c)];
+        #region Inventory
+        public static string FormatInventoryButtonContent(Card c) {
+            return c.Edition >= 4
+                ? "Max Edition"
+                : string.Format("Trade Up {0} for ED{1}", Globals.CardTradeUpCount(c.Edition).ToString(), c.Edition + 1);
+        }
+
+        public static string FormatInventorySellPrice(Card c) {
+            return string.Format("Sell for {0}", Globals.CardSellPrice(c).ToString());
+        }
+
+        public static string FormatInventoryInfoTextBlock(Card c, Dictionary<string, int> OwnedCards) {
+            return c.Name + "\n" + c.Anime + "\nEd: " + c.Edition + "\nOwned Copies: " + OwnedCards[FormatOwnedCards(c)];
+        }
+        #endregion
+
+        #region WorkWindow
+        #endregion
+
     }
 }

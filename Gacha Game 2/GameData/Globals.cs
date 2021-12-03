@@ -19,6 +19,7 @@ namespace Gacha_Game_2.GameData {
         public static string PlayerDataFile => GameDataDir + "PlayerData.dat";
         public static string InventoryDataFile => GameDataDir + "Inventory.dat";
         public static string OwnedCardsFile => GameDataDir + "Cards.dat";
+        public static string WorkerCardsFile => GameDataDir + "Workers.dat";
         public static string LogFile => GameDataDir + "Log.dat";
         public static string ServerDetailsFile => GameDataDir + "ServerInfo.txt";
         public static string RolledCardsFile => GameDataDir + "DropData.dat";
